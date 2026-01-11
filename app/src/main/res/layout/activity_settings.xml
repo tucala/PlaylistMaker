@@ -45,17 +45,20 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:layout_marginBottom="@dimen/textAllign"
             >
 
-            <Button
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:backgroundTint="@color/white"
+                android:clickable="false"
+                android:gravity="start|center_vertical"
                 android:text="@string/themeSwitch"
                 android:textColor="@color/black"
                 android:textSize="@dimen/settingText"
-                android:backgroundTint="@color/white"
-                android:gravity="start|center_vertical"
-                android:clickable="false" />
+                android:layout_marginStart="@dimen/allign"
+                />
 
             <Switch
                 android:id="@+id/switchDarkMode"
@@ -66,54 +69,70 @@
                 android:checked="false" />
         </FrameLayout>
 
-        <Button
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="@string/shareApp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settingText"
             android:backgroundTint="@color/white"
             android:drawableEnd="@drawable/ic_share"
             android:drawablePadding="12dp"
-            android:gravity="start|center_vertical"
-            android:drawableTint="@color/black"
+            android:drawableTint="@color/YP_Gray"
             android:foreground="?android:attr/selectableItemBackground"
-            />
+            android:gravity="start|center_vertical"
+            android:includeFontPadding="false"
+            android:text="@string/shareApp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/settingText"
+            android:layout_marginStart="@dimen/allign"
+            android:layout_marginEnd="@dimen/allign"
+            android:layout_marginTop="@dimen/textAllign"
+            android:layout_marginBottom="@dimen/textAllign"/>
 
 
-        <Button
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:drawableEnd="@drawable/ic_support"
+            android:drawablePadding="17dp"
+            android:drawableTint="@color/YP_Gray"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:gravity="start|center_vertical"
+            android:includeFontPadding="false"
             android:text="@string/support"
             android:textColor="@color/black"
             android:textSize="@dimen/settingText"
-            android:backgroundTint="@color/white"
-            android:drawableEnd="@drawable/ic_support"
-            android:drawablePadding="12dp"
-            android:gravity="start|center_vertical"
-            android:drawableTint="@color/black"
-            android:foreground="?android:attr/selectableItemBackground"
-            />
+            android:layout_marginStart="@dimen/allign"
+            android:layout_marginEnd="@dimen/allign"
+            android:layout_marginTop="@dimen/textAllign"
+            android:layout_marginBottom="@dimen/textAllign"/>
 
-        <Button
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="@string/userAccept"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settingText"
             android:backgroundTint="@color/white"
             android:drawableEnd="@drawable/ic_next"
             android:drawablePadding="12dp"
-            android:gravity="start|center_vertical"
-            android:drawableTint="@color/black"
+            android:drawableTint="@color/YP_Gray"
             android:foreground="?android:attr/selectableItemBackground"
-            />
+            android:gravity="start|center_vertical"
+            android:includeFontPadding="false"
+            android:text="@string/userAccept"
+            android:textSize="@dimen/settingText"
+            android:layout_marginStart="@dimen/allign"
+            android:layout_marginEnd="@dimen/allign"
+            android:layout_marginTop="@dimen/textAllign"
+            android:layout_marginBottom="@dimen/textAllign"/>
 
 
 
     </LinearLayout>
+
+
+
+    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
