@@ -124,7 +124,8 @@
             android:layout_marginStart="@dimen/allign"
             android:layout_marginEnd="@dimen/allign"
             android:layout_marginTop="@dimen/textAllign"
-            android:layout_marginBottom="@dimen/textAllign"/>
+            android:layout_marginBottom="@dimen/textAllign"
+            android:textColor="@color/black"/>
 
 
 
