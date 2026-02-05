@@ -9,4 +9,11 @@
     <string name="support">Написать в поддержку</string>
     <string name="userAccept">Пользовательское соглашение</string>
     <string name="title_activity_settings">SettingsActivity</string>
+
+    <string name="shareAPP">кнопка делится</string>
+    <string name="mailTo">pectopa4pda@yandex.ru</string>
+    <string name="mailSendTheme">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="mailSendBody">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="userAcceptUrl">https://yandex.ru/legal/practicum_offer/ru/</string>
+
 </resources>

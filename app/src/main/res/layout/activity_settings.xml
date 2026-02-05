@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:id="@+id/setting"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/background">
 
      <ImageView
          android:id="@+id/btnBack"
@@ -14,10 +14,10 @@
          android:src="@drawable/ic_back"
          android:layout_marginStart="16dp"
          android:layout_marginTop="14dp"
-         app:tint="@color/black"
          app:layout_constraintTop_toTopOf="parent"
          app:layout_constraintBottom_toBottomOf="@+id/text"
-         app:layout_constraintStart_toStartOf="parent"/>
+         app:layout_constraintStart_toStartOf="parent"
+         style="@style/icTheme"/>
 
     <TextView
         android:id="@+id/text"
@@ -25,12 +25,13 @@
         android:layout_height="wrap_content"
         android:text="@string/settings"
         android:textSize="@dimen/buttonText"
-        android:textColor="@color/black"
+        android:fontFamily="@font/ys_display_medium"
         android:gravity="start|top"
         android:layout_marginStart="28dp"
         android:layout_marginTop="14dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnBack"/>
+        app:layout_constraintStart_toEndOf="@id/btnBack"
+        style="@style/tgToggle"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,9 +56,10 @@
                 android:clickable="false"
                 android:gravity="start|center_vertical"
                 android:text="@string/themeSwitch"
-                android:textColor="@color/black"
                 android:textSize="@dimen/settingText"
                 android:layout_marginStart="@dimen/allign"
+                android:fontFamily="@font/ys_display_regular"
+                style="@style/tgToggle"
                 />
 
             <Switch
@@ -70,70 +72,27 @@
         </FrameLayout>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
+            android:id="@+id/shareApp"
             android:drawableEnd="@drawable/ic_share"
-            android:drawablePadding="12dp"
-            android:drawableTint="@color/YP_Gray"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:gravity="start|center_vertical"
-            android:includeFontPadding="false"
             android:text="@string/shareApp"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settingText"
-            android:layout_marginStart="@dimen/allign"
-            android:layout_marginEnd="@dimen/allign"
-            android:layout_marginTop="@dimen/textAllign"
-            android:layout_marginBottom="@dimen/textAllign"/>
+            style="@style/settingsPunkt"/>
 
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
+            android:id="@+id/textSupport"
             android:drawableEnd="@drawable/ic_support"
-            android:drawablePadding="17dp"
-            android:drawableTint="@color/YP_Gray"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:gravity="start|center_vertical"
-            android:includeFontPadding="false"
             android:text="@string/support"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settingText"
-            android:layout_marginStart="@dimen/allign"
-            android:layout_marginEnd="@dimen/allign"
-            android:layout_marginTop="@dimen/textAllign"
-            android:layout_marginBottom="@dimen/textAllign"/>
+            style="@style/settingsPunkt"/>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
+            android:id="@+id/userAccept"
             android:drawableEnd="@drawable/ic_next"
-            android:drawablePadding="12dp"
-            android:drawableTint="@color/YP_Gray"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:gravity="start|center_vertical"
-            android:includeFontPadding="false"
             android:text="@string/userAccept"
-            android:textSize="@dimen/settingText"
-            android:layout_marginStart="@dimen/allign"
-            android:layout_marginEnd="@dimen/allign"
-            android:layout_marginTop="@dimen/textAllign"
-            android:layout_marginBottom="@dimen/textAllign"
-            android:textColor="@color/black"/>
-
-
+            style="@style/settingsPunkt"/>
 
     </LinearLayout>
 
-
-
-    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
