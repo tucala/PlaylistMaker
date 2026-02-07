@@ -15,5 +15,7 @@
     <string name="mailSendTheme">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="mailSendBody">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="userAcceptUrl">https://yandex.ru/legal/practicum_offer/ru/</string>
+    <string name="textShareSettings">share App</string>
+    <string name="textSendSettings">send email</string>
 
 </resources>

@@ -1,98 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/setting"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:background="?attr/background">
 
-     <ImageView
-         android:id="@+id/btnBack"
-         android:layout_width="@dimen/buttonText"
-         android:layout_height="@dimen/buttonText"
-         android:importantForAccessibility="no"
-         android:src="@drawable/ic_back"
-         android:layout_marginStart="16dp"
-         android:layout_marginTop="14dp"
-         app:layout_constraintTop_toTopOf="parent"
-         app:layout_constraintBottom_toBottomOf="@+id/text"
-         app:layout_constraintStart_toStartOf="parent"
-         style="@style/icTheme"/>
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarTop"
+        style="@style/tnSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/downToolbar"
+        app:navigationIcon="@drawable/ic_back"
+        app:title="@string/settings"
+        app:titleMarginStart="12dp"
+        app:titleTextAppearance="@style/ToolbarTitleAppearance"
+        app:navigationIconTint="?attr/colorOnSurface" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switchDarkMode"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginStart="@dimen/allign"
+        android:layout_marginEnd="@dimen/allign"
+        android:text="@string/themeSwitch"
+        android:textSize="@dimen/settingText"
+        android:fontFamily="@font/ys_display_regular"
+        android:checked="false"
+        style="@style/Widget.AppCompat.CompoundButton.Switch" />
+
+
 
     <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/settings"
-        android:textSize="@dimen/buttonText"
-        android:fontFamily="@font/ys_display_medium"
-        android:gravity="start|top"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="14dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnBack"
-        style="@style/tgToggle"/>
-
-    <LinearLayout
+        android:id="@+id/shareApp"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/spaceText"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/text"
-        >
+        android:layout_height="56dp"
+        android:layout_marginStart="@dimen/allign"
+        android:layout_marginEnd="@dimen/allign"
+        android:drawableEnd="@drawable/ic_share"
+        android:gravity="start|center_vertical"
+        android:text="@string/shareApp"
+        style="@style/settingsPunkt"/>
 
+    <TextView
+        android:id="@+id/textSupport"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginStart="@dimen/allign"
+        android:layout_marginEnd="@dimen/allign"
+        android:drawableEnd="@drawable/ic_support"
+        android:gravity="start|center_vertical"
+        android:text="@string/support"
+        style="@style/settingsPunkt"/>
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="@dimen/textAllign"
-            >
+    <TextView
+        android:id="@+id/userAccept"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginStart="@dimen/allign"
+        android:layout_marginEnd="@dimen/allign"
+        android:layout_marginBottom="@dimen/textAllign"
+        android:drawableEnd="@drawable/ic_next"
+        android:gravity="start|center_vertical"
+        android:text="@string/userAccept"
+        style="@style/settingsPunkt"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:backgroundTint="@color/white"
-                android:clickable="false"
-                android:gravity="start|center_vertical"
-                android:text="@string/themeSwitch"
-                android:textSize="@dimen/settingText"
-                android:layout_marginStart="@dimen/allign"
-                android:fontFamily="@font/ys_display_regular"
-                style="@style/tgToggle"
-                />
-
-            <Switch
-                android:id="@+id/switchDarkMode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="12dp"
-                android:checked="false" />
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/shareApp"
-            android:drawableEnd="@drawable/ic_share"
-            android:text="@string/shareApp"
-            style="@style/settingsPunkt"/>
-
-
-        <TextView
-            android:id="@+id/textSupport"
-            android:drawableEnd="@drawable/ic_support"
-            android:text="@string/support"
-            style="@style/settingsPunkt"/>
-
-        <TextView
-            android:id="@+id/userAccept"
-            android:drawableEnd="@drawable/ic_next"
-            android:text="@string/userAccept"
-            style="@style/settingsPunkt"/>
-
-    </LinearLayout>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

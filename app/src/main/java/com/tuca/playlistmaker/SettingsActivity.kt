@@ -1,6 +1,7 @@
 package com.tuca.playlistmaker
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.net.toUri
+import com.google.android.material.appbar.MaterialToolbar
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,9 +22,8 @@ class SettingsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val backButton = findViewById<ImageView>(R.id.btnBack)
-        backButton.setOnClickListener {
-            val backIntent = Intent(this, MainActivity::class.java)
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbarTop)
+        toolbar.setNavigationOnClickListener {
             finish()
         }
 
@@ -31,18 +32,21 @@ class SettingsActivity : AppCompatActivity() {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
             shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.shareAPP))
-            startActivity(Intent.createChooser(shareIntent, "share App"))
+            startActivity(Intent.createChooser(shareIntent, "@string/textShareSettings"))
         }
 
         val textSupport = findViewById<TextView>(R.id.textSupport)
         textSupport.setOnClickListener {
-            val emailIntent = Intent(Intent.ACTION_SEND)
-            emailIntent.type = "message/rfc822"
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.mailTo)))
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.mailSendTheme))
-            emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.mailSendBody))
-            startActivity(Intent.createChooser(emailIntent, "send email"))
+            val mailto = "mailto:${getString(R.string.mailTo)}" +
+                    "?subject=${Uri.encode(getString(R.string.mailSendTheme))}" +
+                    "&body=${Uri.encode(getString(R.string.mailSendBody))}"
+            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse(mailto)
+            }
+            startActivity(emailIntent)
         }
+
+
 
         val userAccept = findViewById<TextView>(R.id.userAccept)
         userAccept.setOnClickListener {

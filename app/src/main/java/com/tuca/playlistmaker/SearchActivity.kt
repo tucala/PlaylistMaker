@@ -16,6 +16,7 @@ import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import android.text.TextWatcher
 import android.view.inputmethod.InputMethodManager
+import com.google.android.material.appbar.MaterialToolbar
 
 
 class SearchActivity : AppCompatActivity() {
@@ -39,8 +40,8 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        val backButton = findViewById<ImageView>(R.id.btnBack)
-        backButton.setOnClickListener {
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbarTop)
+        toolbar.setNavigationOnClickListener {
             finish()
         }
 
@@ -57,7 +58,7 @@ class SearchActivity : AppCompatActivity() {
                     if (showClear)
                         ContextCompat.getDrawable(
                             this@SearchActivity,
-                            android.R.drawable.ic_menu_close_clear_cancel
+                            R.drawable.ic_cleartext
                         )
                     else null,
                     null
