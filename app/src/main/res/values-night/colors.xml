@@ -7,6 +7,6 @@
     <color name="YP_Black">#1A1B22</color>
     <color name="YP_Text_Gray">#818C99</color>
     <color name="YP_Light_Gray">#E6E8EB</color>
-    <color name="searchBackground">#E6E8EB</color>
-    <color name="searchIcon">#818C99</color>
+    <color name="searchBackground">#FFFFFF</color>
+    <color name="searchIcon">#1A1B22</color>
 </resources>
