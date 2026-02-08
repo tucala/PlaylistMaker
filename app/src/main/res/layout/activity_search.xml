@@ -22,28 +22,51 @@
         app:titleMarginStart="12dp"
         app:titleTextAppearance="@style/ToolbarTitleAppearance" />
 
-    <EditText
-        android:id="@+id/editTextSearch"
-        style="@style/searchBackground"
+    <FrameLayout
+        android:id="@+id/searchFrame"
         android:layout_width="0dp"
-        android:layout_height="36dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/allign"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="@dimen/allign"
-        android:background="@drawable/edit_text_background"
-        android:drawableStart="@drawable/ic_search"
-        android:drawablePadding="8dp"
-        android:fontFamily="@font/ys_display_regular"
-        android:hint="@string/search"
-        android:paddingStart="@dimen/allign"
-        android:paddingEnd="12dp"
-        android:textColor="@color/black"
-        android:textSize="@dimen/settingText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarTop"
-        app:layout_constraintWidth_percent="0.9"
-        android:inputType="text" />
+        app:layout_constraintTop_toBottomOf="@id/toolbarTop">
+
+        <EditText
+            android:id="@+id/editTextSearch"
+            style="@style/searchBackground"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="@string/search"
+            android:textSize="16sp"
+            android:fontFamily="@font/ys_display_regular"
+            android:textColorHint="@color/YP_Text_Gray"
+            android:includeFontPadding="false"
+            android:paddingStart="@dimen/icSearchAllign"
+            android:paddingTop="@dimen/icSearchDU"
+            android:paddingBottom="@dimen/icSearchDU"
+            android:drawableStart="@drawable/ic_search"
+            android:drawableTint="@color/YP_Text_Gray"
+            android:drawablePadding="12dp"
+            android:gravity="center_vertical|start"
+            android:textCursorDrawable="@drawable/custom_cursor"
+            android:inputType="text"
+            android:maxLines="1"
+            android:scrollHorizontally="true" />
+
+        <ImageView
+            android:id="@+id/clearIcon"
+            android:layout_width="@dimen/allign"
+            android:layout_height="@dimen/allign"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/ic_cleartext"
+            android:visibility="gone"
+            android:drawableTint="@color/YP_Text_Gray"/>
+
+    </FrameLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

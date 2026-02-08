@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="allign">16dp</dimen>
+    <dimen name="icSearchAllign">12dp</dimen>
+    <dimen name="icSearchDU">10dp</dimen>
     <dimen name="buttonText">22sp</dimen>
     <dimen name="buttonRadius">16dp</dimen>
     <dimen name="spaceText">40dp</dimen>

@@ -16,6 +16,8 @@ import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import android.text.TextWatcher
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.appbar.MaterialToolbar
 
 
@@ -69,24 +71,15 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        // обработка клика по крестику
-        editTextSearch.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_UP) {
-                val drawableEnd = editTextSearch.compoundDrawables[2]
-                if (drawableEnd != null) {
-                    val clearButtonStart = editTextSearch.width -
-                            editTextSearch.paddingRight -
-                            drawableEnd.intrinsicWidth
-                    if (event.x >= clearButtonStart) {
-                        editTextSearch.setText("")
-                        editTextSearch.clearFocus()
-                        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                        imm.hideSoftInputFromWindow(editTextSearch.windowToken, 0)
-                        return@setOnTouchListener true
-                    }
-                }
-            }
-            false
+        val editTextSearch = findViewById<EditText>(R.id.editTextSearch)
+        val clearIcon = findViewById<ImageView>(R.id.clearIcon)
+
+        editTextSearch.doAfterTextChanged { text ->
+            clearIcon.isVisible = !text.isNullOrEmpty()
+        }
+
+        clearIcon.setOnClickListener {
+            editTextSearch.setText("")
         }
     }
 
