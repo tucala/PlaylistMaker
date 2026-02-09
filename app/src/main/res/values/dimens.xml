@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="allign">16dp</dimen>
-    <dimen name="buttonText">24sp</dimen>
+    <dimen name="icSearchAllign">12dp</dimen>
+    <dimen name="icSearchDU">10dp</dimen>
+    <dimen name="buttonText">22sp</dimen>
     <dimen name="buttonRadius">16dp</dimen>
     <dimen name="spaceText">40dp</dimen>
     <dimen name="settingText">16sp</dimen>
     <dimen name="bottomMargin">28dp</dimen>
     <dimen name="textAllign">21dp</dimen>
+    <dimen name="lHeight">0dp</dimen>
+    <dimen name="downToolbar">56dp</dimen>
 </resources>
