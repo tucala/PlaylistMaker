@@ -53,4 +53,17 @@
         <item name="android:drawableTint">@color/searchIcon</item>
     </style>
 
+    <style name="trackNameSearch">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:text">@string/testString</item>
+        <item name="android:textSize">@dimen/trackName</item>
+    </style>
+    <style name="artistNameSearch">
+        <item name="android:textColor">@color/YP_Text_Gray</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:text">@string/testString</item>
+        <item name="android:textSize">@dimen/artistName</item>
+    </style>
+
 </resources>

@@ -18,4 +18,5 @@
     <string name="textShareSettings">share App</string>
     <string name="textSendSettings">send email</string>
 
+    <string name="testString">artistName</string>
 </resources>
