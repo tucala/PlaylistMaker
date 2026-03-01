@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    >
+
+        <ImageView
+            android:id="@+id/sadImage"
+            android:src="@drawable/no_track_image"
+            style="@style/trackErrorImage"/>
+
+        <TextView
+            android:id="@+id/notFoundText"
+            android:layout_width="312dp"
+            android:layout_height="20dp"
+            android:text="@string/notFound"
+            app:layout_constraintTop_toBottomOf="@id/sadImage"
+            android:layout_marginTop="16dp"
+            style="@style/trackErrorText"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

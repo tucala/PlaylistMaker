@@ -19,4 +19,10 @@
     <string name="textSendSettings">send email</string>
 
     <string name="testString">artistName</string>
+
+    <string name="notFound">Ничего не найдено</string>
+
+    <string name="netTrouble">Проблемы со связью</string>
+    <string name="cantDown">Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="reload">Обновить</string>
 </resources>

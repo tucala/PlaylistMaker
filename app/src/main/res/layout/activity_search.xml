@@ -29,6 +29,8 @@
         android:layout_marginStart="@dimen/allign"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="@dimen/allign"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbarTop">
@@ -39,22 +41,25 @@
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:background="@drawable/edit_text_background"
-            android:hint="@string/search"
-            android:textSize="16sp"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="12dp"
+            android:drawableTint="@color/YP_Text_Gray"
             android:fontFamily="@font/ys_display_regular"
-            android:textColorHint="@color/YP_Text_Gray"
+            android:gravity="center_vertical|start"
+            android:hint="@string/search"
+            android:imeOptions="actionDone"
             android:includeFontPadding="false"
+            android:inputType="text"
+            android:maxLines="1"
             android:paddingStart="@dimen/icSearchAllign"
             android:paddingTop="@dimen/icSearchDU"
             android:paddingBottom="@dimen/icSearchDU"
-            android:drawableStart="@drawable/ic_search"
-            android:drawableTint="@color/YP_Text_Gray"
-            android:drawablePadding="12dp"
-            android:gravity="center_vertical|start"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/searchTextColor"
+            android:textColorHint="@color/YP_Text_Gray"
             android:textCursorDrawable="@drawable/custom_cursor"
-            android:inputType="text"
-            android:maxLines="1"
-            android:scrollHorizontally="true" />
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/clearIcon"
@@ -62,9 +67,9 @@
             android:layout_height="@dimen/allign"
             android:layout_gravity="end|center_vertical"
             android:layout_marginEnd="12dp"
+            android:drawableTint="@color/YP_Text_Gray"
             android:src="@drawable/ic_cleartext"
-            android:visibility="gone"
-            android:drawableTint="@color/YP_Text_Gray"/>
+            android:visibility="gone" />
 
     </FrameLayout>
 
@@ -73,11 +78,32 @@
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/searchFrame" />
+
+    <FrameLayout
+        android:layout_marginTop="102dp"
+        android:id="@+id/overlayContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/recyclerView">
+
+        <include
+            android:id="@+id/track_not_found"
+            layout="@layout/track_not_found"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/inet_trouble_retry"
+            layout="@layout/inet_trouble_retry"
+            android:visibility="gone" />
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

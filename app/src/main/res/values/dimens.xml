@@ -15,4 +15,6 @@
     <dimen name="miniCoverSize">45dp</dimen>
     <dimen name="trackName">16sp</dimen>
     <dimen name="artistName">11sp</dimen>
+    <dimen name="imageErrorSize">120dp</dimen>
+    <dimen name="textErrorSize">19sp</dimen>
 </resources>

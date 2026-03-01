@@ -15,7 +15,9 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(track: SearchActivity.Track) {
         tvTitle.text = track.trackName
-        tvArtistTime.text = "${track.artistName} • ${track.trackTime}"
+        val artistName = track.artistName
+        val limitedArtistName = if (artistName.length > 30) artistName.take(30) + "…" else artistName
+        tvArtistTime.text = "$limitedArtistName • ${track.trackTime}"
 
         val context = itemView.context
         val cornerRadius = context.resources.getDimensionPixelSize(R.dimen.cover_corner_radius)
