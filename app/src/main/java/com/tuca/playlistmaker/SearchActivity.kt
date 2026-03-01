@@ -11,53 +11,40 @@ import androidx.core.view.WindowInsetsCompat
 import android.text.Editable
 import androidx.core.content.ContextCompat
 import android.text.TextWatcher
+import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.appbar.MaterialToolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
+import com.google.gson.annotations.SerializedName
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.Locale
+import kotlin.collections.emptyList
 
 
 class SearchActivity : AppCompatActivity() {
     data class Track(val trackName: String,
                      val artistName: String,
-                     val trackTime: String,
-                     val artworkUrl100: String) // data class
-    private val mockTracks: ArrayList<Track> = arrayListOf(
-        Track(
-            "Smells Like Teen Spirit",
-            "Nirvana",
-            "5:01",
-            "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
-        ),
-        Track(
-            "Billie Jean",
-            "Michael Jackson",
-            "4:35",
-            "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"
-        ),
-        Track(
-            "Stayin' Alive",
-            "Bee Gees",
-            "4:10",
-            "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"
-        ),
-        Track(
-            "Whole Lotta Love",
-            "Led Zeppelin",
-            "5:33",
-            "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"
-        ),
-        Track(
-            "Sweet Child O'Mine",
-            "Guns N' Roses",
-            "5:03",
-            "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
-        )
-    ) // data track
+                     @SerializedName("trackTimeMillis")
+                     val trackTimeMillis: Int,
+                     val artworkUrl100: String
+    ) {
+        val trackTime: String
+            get() = SimpleDateFormat("mm:ss", Locale.getDefault())
+                .format(trackTimeMillis.toLong())
+    }
 
     private lateinit var editTextSearch: EditText
+    private lateinit var trackNotFound: View
+    private lateinit var internetTrouble: View
+    private lateinit var reloadButton: View
     private var searchText: String = ""
 
     companion object {
@@ -71,6 +58,12 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_search)
+        trackNotFound = findViewById(R.id.track_not_found)
+        internetTrouble = findViewById(R.id.inet_trouble_retry)
+        reloadButton = findViewById(R.id.reloadButton)
+        trackNotFound.isVisible = false
+        internetTrouble.isVisible = false
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -83,10 +76,17 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://itunes.apple.com")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val api = retrofit.create(ITunesApi::class.java)
+
         editTextSearch = findViewById(R.id.editTextSearch)
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        searchAdapter = TrackAdapter(mockTracks)
+        searchAdapter = TrackAdapter(arrayListOf())
         recyclerView.adapter = searchAdapter
         editTextSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -110,38 +110,86 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        val editTextSearch = findViewById<EditText>(R.id.editTextSearch)
         val clearIcon = findViewById<ImageView>(R.id.clearIcon)
 
         editTextSearch.doAfterTextChanged { text ->
             clearIcon.isVisible = !text.isNullOrEmpty()
         }
 
+        reloadButton.setOnClickListener {
+            val query = editTextSearch.text.toString()
+            if (query.isNotEmpty()) {
+                showState(showList = false, showError = false, showNotFound = false)
+                api.search(query).enqueue(object : Callback<TrackResponse> {
+                    override fun onResponse(
+                        call: Call<TrackResponse>,
+                        response: Response<TrackResponse>
+                    ) {
+                        val tracks = response.body()?.results ?: emptyList()
+                        searchAdapter.updateTracks(tracks)
+
+                        if (tracks.isEmpty()) {
+                            showState(showNotFound = true)
+                        } else {
+                            showState(showList = true)
+                        }
+                    }
+
+                    override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                        showState(showError = true)
+                    }
+                })
+            }
+        }
+
         clearIcon.setOnClickListener {
             editTextSearch.setText("")
         }
-    }
+        editTextSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
 
+                val query = editTextSearch.text.toString()
 
-     fun afterTextChanged(s: Editable?) {
-        searchText = s?.toString() ?: ""
+                if (query.isNotEmpty()) {
+                    api.search(query).enqueue(object : Callback<TrackResponse> {
+                        override fun onResponse(
+                            call: Call<TrackResponse>,
+                            response: Response<TrackResponse>
+                        ) {
+                            val tracks = response.body()?.results ?: emptyList()
+                            searchAdapter.updateTracks(tracks)
 
-        val showClear = searchText.isNotEmpty()
-        editTextSearch.setCompoundDrawablesWithIntrinsicBounds(
-            ContextCompat.getDrawable(this@SearchActivity, R.drawable.ic_search),
-            null,
-            if (showClear) ContextCompat.getDrawable(this@SearchActivity, R.drawable.ic_cleartext) else null,
-            null
-        )
+                            if (tracks.isEmpty()) {
+                                showState(showNotFound = true)
+                            } else {
+                                showState(showList = true)
+                            }
+                        }
 
-        // Фильтр
-        val filteredTracks = mockTracks.filter { track ->
-            track.trackName.contains(searchText, ignoreCase = true) ||
-                    track.artistName.contains(searchText, ignoreCase = true)
+                        override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                            searchAdapter.updateTracks(emptyList())
+                            showState(showError = true)
+                        }
+                    })
+                }
+
+                true
+            } else {
+                false
+            }
         }
-        searchAdapter.updateTracks(filteredTracks)
     }
 
+    private fun showState(
+        showList: Boolean = false,
+        showNotFound: Boolean = false,
+        showError: Boolean = false
+    ) {
+        recyclerView.visibility = View.VISIBLE
+
+        trackNotFound.visibility = if (showNotFound) View.VISIBLE else View.GONE
+        internetTrouble.visibility = if (showError) View.VISIBLE else View.GONE
+    }
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(KEY_SEARCH_TEXT, searchText)
