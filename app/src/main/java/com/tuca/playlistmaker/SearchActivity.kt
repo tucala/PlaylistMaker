@@ -77,7 +77,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://itunes.apple.com")
+            .baseUrl("https://itunes.apple.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -144,6 +144,9 @@ class SearchActivity : AppCompatActivity() {
 
         clearIcon.setOnClickListener {
             editTextSearch.setText("")
+            searchAdapter.updateTracks(emptyList())
+            trackNotFound.visibility = View.GONE
+            internetTrouble.visibility = View.GONE
         }
         editTextSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
