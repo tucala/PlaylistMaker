@@ -2,22 +2,23 @@ package com.tuca.playlistmaker
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import android.text.Editable
-import androidx.core.content.ContextCompat
-import android.text.TextWatcher
-import android.view.View
-import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
-import com.google.android.material.appbar.MaterialToolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,7 +27,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.Locale
-import kotlin.collections.emptyList
 
 
 class SearchActivity : AppCompatActivity() {
@@ -44,6 +44,11 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var editTextSearch: EditText
     private lateinit var trackNotFound: View
     private lateinit var internetTrouble: View
+    private lateinit var historyLayout: View
+    private lateinit var historyManager: SearchHistory
+    private lateinit var historyRecycler: RecyclerView
+    private lateinit var historyAdapter: TrackAdapter
+
     private lateinit var reloadButton: View
     private var searchText: String = ""
 
@@ -58,12 +63,30 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_search)
+        historyLayout = findViewById(R.id.historyLayout)
+        historyRecycler = findViewById(R.id.trackHistoryList)
         trackNotFound = findViewById(R.id.track_not_found)
         internetTrouble = findViewById(R.id.inet_trouble_retry)
         reloadButton = findViewById(R.id.reloadButton)
         trackNotFound.isVisible = false
         internetTrouble.isVisible = false
 
+        historyManager = SearchHistory(
+            getSharedPreferences("settings", MODE_PRIVATE)
+        )
+        historyAdapter = TrackAdapter(arrayListOf()) { track ->
+            historyManager.addTrack(track)
+        }
+        historyRecycler.layoutManager = LinearLayoutManager(this)
+        historyRecycler.adapter = historyAdapter
+        historyLayout = findViewById(R.id.historyLayout)
+        historyLayout.visibility = View.GONE
+        val clearHistoryButton = findViewById<Button>(R.id.clearHistoryButton)
+        clearHistoryButton.setOnClickListener {
+            historyManager.clear()
+            historyAdapter.updateTracks(emptyList())
+            showHistory()
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -76,6 +99,8 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
+
+
         val retrofit = Retrofit.Builder()
             .baseUrl("https://itunes.apple.com/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -86,11 +111,22 @@ class SearchActivity : AppCompatActivity() {
         editTextSearch = findViewById(R.id.editTextSearch)
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        searchAdapter = TrackAdapter(arrayListOf())
+        searchAdapter = TrackAdapter(arrayListOf()) { track ->
+            historyManager.addTrack(track)
+        }
         recyclerView.adapter = searchAdapter
         editTextSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 searchText = s?.toString() ?: ""
+                if (searchText.isNotEmpty()) {
+                    historyLayout.visibility = View.GONE
+                    historyRecycler.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
+                    trackNotFound.visibility = View.GONE
+                    internetTrouble.visibility = View.GONE
+                } else {
+                    showHistory()
+                }
 
                 val showClear = searchText.isNotEmpty()
                 editTextSearch.setCompoundDrawablesWithIntrinsicBounds(
@@ -147,6 +183,7 @@ class SearchActivity : AppCompatActivity() {
             searchAdapter.updateTracks(emptyList())
             trackNotFound.visibility = View.GONE
             internetTrouble.visibility = View.GONE
+            showHistory()
         }
         editTextSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -154,6 +191,7 @@ class SearchActivity : AppCompatActivity() {
                 val query = editTextSearch.text.toString()
 
                 if (query.isNotEmpty()) {
+                    showState(showList = false, showError = false, showNotFound = false)
                     api.search(query).enqueue(object : Callback<TrackResponse> {
                         override fun onResponse(
                             call: Call<TrackResponse>,
@@ -181,14 +219,18 @@ class SearchActivity : AppCompatActivity() {
                 false
             }
         }
+        showHistory()
     }
-
     private fun showState(
         showList: Boolean = false,
         showNotFound: Boolean = false,
         showError: Boolean = false
     ) {
-        recyclerView.visibility = View.VISIBLE
+        recyclerView.visibility = if (showList) View.VISIBLE else View.GONE
+        if (showList) {
+            historyLayout.visibility = View.GONE
+            historyRecycler.visibility = View.GONE
+        }
 
         trackNotFound.visibility = if (showNotFound) View.VISIBLE else View.GONE
         internetTrouble.visibility = if (showError) View.VISIBLE else View.GONE
@@ -204,4 +246,26 @@ class SearchActivity : AppCompatActivity() {
         searchText = restored
         editTextSearch.setText(restored)
     }
+    private fun showHistoryIfExists() {
+        val history = historyManager.getHistory()
+        if (history.isNotEmpty()) {
+            historyLayout.visibility = View.VISIBLE
+        } else {
+            historyLayout.visibility = View.GONE
+        }
+    }
+    private fun showHistory() {
+        val history = historyManager.getHistory()
+
+        if (history.isNotEmpty()) {
+            historyLayout.visibility = View.VISIBLE
+            historyRecycler.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+            historyAdapter.updateTracks(history)
+        } else {
+            historyLayout.visibility = View.GONE
+            historyRecycler.visibility = View.GONE
+        }
+    }
+
 }

@@ -30,7 +30,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="@dimen/allign"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbarTop">
@@ -104,6 +103,18 @@
             layout="@layout/inet_trouble_retry"
             android:visibility="gone" />
     </FrameLayout>
+
+    <include
+        android:id="@+id/historyLayout"
+        layout="@layout/search_history"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/searchFrame"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
