@@ -25,4 +25,6 @@
     <string name="netTrouble">Проблемы со связью</string>
     <string name="cantDown">Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="reload">Обновить</string>
+    <string name="userSearchHist">Вы искали</string>
+    <string name="clearHistoryBut">Очистить историю</string>
 </resources>

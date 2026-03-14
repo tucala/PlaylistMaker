@@ -13,4 +13,6 @@
     <color name="reloadButtonBG">#1A1B22</color>
     <color name="trackIconError">#1A1B22</color>
     <color name="searchTextColor">#1A1B22</color>
+    <color name="ColorChange">#1A1B22</color>
+    <color name="ColorChangeRev">#FFFFFF</color>
 </resources>

@@ -58,6 +58,8 @@
         <item name="fontFamily">@font/ys_display_regular</item>
         <item name="android:text">@string/testString</item>
         <item name="android:textSize">@dimen/trackName</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
     <style name="artistNameSearch">
         <item name="android:textColor">@color/YP_Text_Gray</item>
