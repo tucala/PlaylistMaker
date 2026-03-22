@@ -1,6 +1,7 @@
 package com.tuca.playlistmaker
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,27 +20,14 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 
 class SearchActivity : AppCompatActivity() {
-    data class Track(val trackName: String,
-                     val artistName: String,
-                     @SerializedName("trackTimeMillis")
-                     val trackTimeMillis: Int,
-                     val artworkUrl100: String
-    ) {
-        val trackTime: String
-            get() = SimpleDateFormat("mm:ss", Locale.getDefault())
-                .format(trackTimeMillis.toLong())
-    }
 
     private lateinit var editTextSearch: EditText
     private lateinit var trackNotFound: View
@@ -76,6 +64,7 @@ class SearchActivity : AppCompatActivity() {
         )
         historyAdapter = TrackAdapter(arrayListOf()) { track ->
             historyManager.addTrack(track)
+            openPlayer(track)
         }
         historyRecycler.layoutManager = LinearLayoutManager(this)
         historyRecycler.adapter = historyAdapter
@@ -113,6 +102,7 @@ class SearchActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         searchAdapter = TrackAdapter(arrayListOf()) { track ->
             historyManager.addTrack(track)
+            openPlayer(track)
         }
         recyclerView.adapter = searchAdapter
         editTextSearch.addTextChangedListener(object : TextWatcher {
@@ -253,6 +243,12 @@ class SearchActivity : AppCompatActivity() {
         } else {
             historyLayout.visibility = View.GONE
         }
+    }
+
+    private fun openPlayer(track: Track) {
+        val intent = Intent(this, PlayerActivity::class.java)
+        intent.putExtra(PlayerActivity.EXTRA_TRACK, track)
+        startActivity(intent)
     }
     private fun showHistory() {
         val history = historyManager.getHistory()

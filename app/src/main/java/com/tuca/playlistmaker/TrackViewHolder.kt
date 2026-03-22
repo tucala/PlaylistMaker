@@ -13,7 +13,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val tvTitle: TextView = itemView.findViewById(R.id.tv_title)
     private val tvArtistTime: TextView = itemView.findViewById(R.id.tv_artist_time)
 
-    fun bind(track: SearchActivity.Track) {
+    fun bind(track: Track) {
         tvTitle.text = track.trackName
         val artistName = track.artistName
         val limitedArtistName = if (artistName.length > 30) artistName.take(30) + "…" else artistName

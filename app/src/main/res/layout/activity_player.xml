@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/background">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarTop"
+        style="@style/tnSwitch"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/downToolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_back"
+        app:navigationIconTint="?attr/colorOnSurface"
+        app:titleTextAppearance="@style/ToolbarTitleAppearance" />
+
+    <ImageView
+        android:id="@+id/playerImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toBottomOf="@id/toolbarTop"
+        app:layout_constraintBottom_toTopOf="@id/trackName"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/trackName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="224dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/library"
+        android:textSize="22sp"
+        android:textColor="@color/ColorChange"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playerImage" />
+    <TextView
+        android:id="@+id/artistName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="@font/ys_display_medium"
+        android:text="@string/app_name"
+        android:textSize="14sp"
+        android:textColor="@color/ColorChange"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/trackName" />
+
+    <ImageButton
+        android:id="@+id/playButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/play_button"
+        android:background="@drawable/play_button"
+        app:backgroundTint="@null"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/artistName" />
+    <ImageButton
+        android:id="@+id/addToPlaylist"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="55dp"
+        android:background="@drawable/add_to_playlist_button"
+        android:scaleType="fitCenter"
+        android:src="@drawable/add_to_playlist_button"
+        app:backgroundTint="@null"
+        app:layout_constraintEnd_toStartOf="@id/playButton"
+        app:layout_constraintHorizontal_bias="0.442"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/artistName" />
+    <ImageButton
+        android:id="@+id/likeTrack"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/like_button"
+        android:scaleType="fitCenter"
+        android:src="@drawable/like_button"
+        app:backgroundTint="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.442"
+        app:layout_constraintStart_toEndOf="@id/playButton"
+        app:layout_constraintTop_toBottomOf="@id/artistName" />
+
+    <TextView
+        android:id="@+id/playedTime"
+        android:layout_width="100dp"
+        android:layout_height="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="4dp"
+        android:text="1111"
+        android:textColor="@color/ColorChange"
+        android:textSize="14sp"
+        android:fontFamily="@font/ys_display_medium"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/playButton"/>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="30dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playedTime">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/trackAddInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

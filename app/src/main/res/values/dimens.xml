@@ -17,4 +17,5 @@
     <dimen name="artistName">11sp</dimen>
     <dimen name="imageErrorSize">120dp</dimen>
     <dimen name="textErrorSize">19sp</dimen>
+    <dimen name="playerCoverRadius">8dp</dimen>
 </resources>
