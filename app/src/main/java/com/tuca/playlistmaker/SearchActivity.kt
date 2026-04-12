@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -36,12 +37,19 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var historyManager: SearchHistory
     private lateinit var historyRecycler: RecyclerView
     private lateinit var historyAdapter: TrackAdapter
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var reloadButton: View
     private var searchText: String = ""
+    private var activeSearchQuery: String = ""
+
+    private val searchHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private var searchRunnable: Runnable = Runnable { }
+    private lateinit var api: ITunesApi
 
     companion object {
         private const val KEY_SEARCH_TEXT = "KEY_SEARCH_TEXT"
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchAdapter: TrackAdapter
@@ -56,8 +64,10 @@ class SearchActivity : AppCompatActivity() {
         trackNotFound = findViewById(R.id.track_not_found)
         internetTrouble = findViewById(R.id.inet_trouble_retry)
         reloadButton = findViewById(R.id.reloadButton)
+        progressBar = findViewById(R.id.pbSearch)
         trackNotFound.isVisible = false
         internetTrouble.isVisible = false
+        progressBar.isVisible = false
 
         historyManager = SearchHistory(
             getSharedPreferences("settings", MODE_PRIVATE)
@@ -95,7 +105,7 @@ class SearchActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val api = retrofit.create(ITunesApi::class.java)
+        api = retrofit.create(ITunesApi::class.java)
 
         editTextSearch = findViewById(R.id.editTextSearch)
         recyclerView = findViewById(R.id.recyclerView)
@@ -108,13 +118,18 @@ class SearchActivity : AppCompatActivity() {
         editTextSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 searchText = s?.toString() ?: ""
+                searchHandler.removeCallbacks(searchRunnable)
+                progressBar.isVisible = false
                 if (searchText.isNotEmpty()) {
                     historyLayout.visibility = View.GONE
                     historyRecycler.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
                     trackNotFound.visibility = View.GONE
                     internetTrouble.visibility = View.GONE
+                    searchDebounce()
                 } else {
+                    searchAdapter.updateTracks(emptyList())
+                    activeSearchQuery = ""
                     showHistory()
                 }
 
@@ -143,28 +158,15 @@ class SearchActivity : AppCompatActivity() {
         }
 
         reloadButton.setOnClickListener {
-            val query = editTextSearch.text.toString()
-            if (query.isNotEmpty()) {
-                showState(showList = false, showError = false, showNotFound = false)
-                api.search(query).enqueue(object : Callback<TrackResponse> {
-                    override fun onResponse(
-                        call: Call<TrackResponse>,
-                        response: Response<TrackResponse>
-                    ) {
-                        val tracks = response.body()?.results ?: emptyList()
-                        searchAdapter.updateTracks(tracks)
+            performSearch(editTextSearch.text.toString())
+        }
 
-                        if (tracks.isEmpty()) {
-                            showState(showNotFound = true)
-                        } else {
-                            showState(showList = true)
-                        }
-                    }
-
-                    override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                        showState(showError = true)
-                    }
-                })
+        editTextSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                performSearch(editTextSearch.text.toString())
+                true
+            } else {
+                false
             }
         }
 
@@ -173,49 +175,18 @@ class SearchActivity : AppCompatActivity() {
             searchAdapter.updateTracks(emptyList())
             trackNotFound.visibility = View.GONE
             internetTrouble.visibility = View.GONE
+            progressBar.isVisible = false
             showHistory()
-        }
-        editTextSearch.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-
-                val query = editTextSearch.text.toString()
-
-                if (query.isNotEmpty()) {
-                    showState(showList = false, showError = false, showNotFound = false)
-                    api.search(query).enqueue(object : Callback<TrackResponse> {
-                        override fun onResponse(
-                            call: Call<TrackResponse>,
-                            response: Response<TrackResponse>
-                        ) {
-                            val tracks = response.body()?.results ?: emptyList()
-                            searchAdapter.updateTracks(tracks)
-
-                            if (tracks.isEmpty()) {
-                                showState(showNotFound = true)
-                            } else {
-                                showState(showList = true)
-                            }
-                        }
-
-                        override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-                            searchAdapter.updateTracks(emptyList())
-                            showState(showError = true)
-                        }
-                    })
-                }
-
-                true
-            } else {
-                false
-            }
         }
         showHistory()
     }
     private fun showState(
         showList: Boolean = false,
         showNotFound: Boolean = false,
-        showError: Boolean = false
+        showError: Boolean = false,
+        showLoading: Boolean = false
     ) {
+        progressBar.visibility = if (showLoading) View.VISIBLE else View.GONE
         recyclerView.visibility = if (showList) View.VISIBLE else View.GONE
         if (showList) {
             historyLayout.visibility = View.GONE
@@ -263,5 +234,35 @@ class SearchActivity : AppCompatActivity() {
             historyRecycler.visibility = View.GONE
         }
     }
+    private fun searchDebounce() {
+        searchHandler.removeCallbacks(searchRunnable)
+        searchRunnable = Runnable { performSearch(searchText) }
+        searchHandler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+    private fun performSearch(query: String) {
+        if (query.isEmpty()) return
 
+        activeSearchQuery = query
+        showState(showList = false, showError = false, showNotFound = false, showLoading = true)
+
+        api.search(query).enqueue(object : Callback<TrackResponse> {
+            override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
+                if (query != searchText || query != activeSearchQuery) return
+                val tracks = response.body()?.results ?: emptyList()
+                searchAdapter.updateTracks(tracks)
+
+                if (tracks.isEmpty()) {
+                    showState(showNotFound = true)
+                } else {
+                    showState(showList = true)
+                }
+            }
+
+            override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
+                if (query != searchText || query != activeSearchQuery) return
+                searchAdapter.updateTracks(emptyList())
+                showState(showError = true)
+            }
+        })
+    }
 }

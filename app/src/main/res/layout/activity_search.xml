@@ -72,7 +72,6 @@
 
     </FrameLayout>
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
@@ -83,15 +82,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/searchFrame" />
 
+    <ProgressBar
+        android:id="@+id/pbSearch"
+        android:layout_width="@dimen/progressSize"
+        android:layout_height="@dimen/progressSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchFrame"
+        android:layout_marginTop="140dp"
+        android:indeterminateTint="@color/progresbarColor"/>
+
     <FrameLayout
         android:layout_marginTop="102dp"
         android:id="@+id/overlayContainer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchFrame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/recyclerView">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <include
             android:id="@+id/track_not_found"

@@ -8,7 +8,8 @@ import java.util.Locale
 data class Track(
     val trackName: String,
     val artistName: String,
-    @SerializedName("trackTimeMillis")
+    @SerializedName("previewUrl")
+    val previewUrl: String?,
     val trackTimeMillis: Long,
     val artworkUrl100: String,
     val collectionName: String? = null,

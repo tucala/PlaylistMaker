@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/background">
+    android:background="?attr/background"
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarTop"
@@ -67,9 +68,10 @@
         android:layout_height="100dp"
         android:layout_marginTop="30dp"
         android:src="@drawable/play_button"
-        android:background="@drawable/play_button"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         app:backgroundTint="@null"
         android:scaleType="fitCenter"
+        android:enabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -110,7 +112,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="4dp"
-        android:text="1111"
+        android:text="00:00"
         android:textColor="@color/ColorChange"
         android:textSize="14sp"
         android:fontFamily="@font/ys_display_medium"
