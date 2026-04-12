@@ -14,4 +14,5 @@
     <color name="ColorChange">#FFFFFF</color>
     <color name="ColorChangeRev">#1A1B22</color>
     <color name="playerButtonsBack">#40FFFFFF</color>
+    <color name="searchBarCol">#1A1B22</color>
 </resources>

@@ -3,6 +3,8 @@ package com.tuca.playlistmaker
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -46,10 +48,16 @@ class SearchActivity : AppCompatActivity() {
     private val searchHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private var searchRunnable: Runnable = Runnable { }
     private lateinit var api: ITunesApi
+    private var isClickAllowed = true
+    private val handler = Handler(Looper.getMainLooper())
+
+
 
     companion object {
         private const val KEY_SEARCH_TEXT = "KEY_SEARCH_TEXT"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+
     }
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchAdapter: TrackAdapter
@@ -73,8 +81,10 @@ class SearchActivity : AppCompatActivity() {
             getSharedPreferences("settings", MODE_PRIVATE)
         )
         historyAdapter = TrackAdapter(arrayListOf()) { track ->
-            historyManager.addTrack(track)
-            openPlayer(track)
+            if (clickDebounce()) {
+                historyManager.addTrack(track)
+                openPlayer(track)
+            }
         }
         historyRecycler.layoutManager = LinearLayoutManager(this)
         historyRecycler.adapter = historyAdapter
@@ -100,6 +110,8 @@ class SearchActivity : AppCompatActivity() {
 
 
 
+
+
         val retrofit = Retrofit.Builder()
             .baseUrl("https://itunes.apple.com/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -111,8 +123,10 @@ class SearchActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         searchAdapter = TrackAdapter(arrayListOf()) { track ->
-            historyManager.addTrack(track)
-            openPlayer(track)
+            if (clickDebounce()) {
+                historyManager.addTrack(track)
+                openPlayer(track)
+            }
         }
         recyclerView.adapter = searchAdapter
         editTextSearch.addTextChangedListener(object : TextWatcher {
@@ -264,5 +278,13 @@ class SearchActivity : AppCompatActivity() {
                 showState(showError = true)
             }
         })
+    }
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 }
