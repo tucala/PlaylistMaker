@@ -26,8 +26,8 @@ class SearchHistory(private val prefs: SharedPreferences) {
                     collectionName = parts.getOrNull(4).orEmpty().ifBlank { null },
                     releaseDate = parts.getOrNull(5).orEmpty().ifBlank { null },
                     primaryGenreName = parts.getOrNull(6).orEmpty().ifBlank { null },
-                    country = parts.getOrNull(7).orEmpty().ifBlank { null }
-                )
+                    country = parts.getOrNull(7).orEmpty().ifBlank { null },
+                    previewUrl = parts.getOrNull(8).orEmpty().ifBlank { null })
                 list.add(track)
             }
         }
@@ -55,7 +55,7 @@ class SearchHistory(private val prefs: SharedPreferences) {
             builder.append(
                 "${track.trackName}|${track.artistName}|${track.trackTimeMillis}|${track.artworkUrl100}" +
                     "|${track.collectionName.orEmpty()}|${track.releaseDate.orEmpty()}" +
-                    "|${track.primaryGenreName.orEmpty()}|${track.country.orEmpty()}"
+                        "|${track.primaryGenreName.orEmpty()}|${track.country.orEmpty()}|${track.previewUrl.orEmpty()}"
             )
             if (index != list.size - 1) builder.append(";")
         }

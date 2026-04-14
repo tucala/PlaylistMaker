@@ -21,10 +21,6 @@
         <item name="navigationIconTint">@color/white</item>
     </style>
 
-    <style name="icTheme">
-        <item name="tint">@color/white</item>
-    </style>
-
     <style name="mainBack">
         <item name="android:background">?attr/background</item>
     </style>

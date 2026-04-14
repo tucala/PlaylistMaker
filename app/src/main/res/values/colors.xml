@@ -6,14 +6,14 @@
     <color name="YP_Gray">#AEAFB4</color>>
     <color name="YP_Black">#1A1B22</color>
     <color name="YP_Text_Gray">#818C99</color>
-    <color name="YP_Light_Gray">#E6E8EB</color>
     <color name="searchBackground">#E6E8EB</color>
     <color name="searchIcon">#818C99</color>
     <color name="reloadTextButton">#FFFFFF</color>
-    <color name="reloadButtonBG">#1A1B22</color>
     <color name="trackIconError">#1A1B22</color>
     <color name="searchTextColor">#1A1B22</color>
     <color name="ColorChange">#1A1B22</color>
     <color name="ColorChangeRev">#FFFFFF</color>
     <color name="playerButtonsBack">#1A1B22</color>
+    <color name="progresbarColor">#3772E7</color>
+    <color name="searchBarCol">#818C99</color>
 </resources>
