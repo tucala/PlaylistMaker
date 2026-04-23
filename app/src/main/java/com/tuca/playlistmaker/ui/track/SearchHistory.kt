@@ -1,6 +1,7 @@
-package com.tuca.playlistmaker
+package com.tuca.playlistmaker.ui.track
 
 import android.content.SharedPreferences
+import com.tuca.playlistmaker.domain.models.Track
 
 class SearchHistory(private val prefs: SharedPreferences) {
 

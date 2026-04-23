@@ -1,4 +1,4 @@
-package com.tuca.playlistmaker
+package com.tuca.playlistmaker.ui.screens
 
 import android.content.Intent
 import android.net.Uri
@@ -12,6 +12,7 @@ import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
+import com.tuca.playlistmaker.R
 
 class SettingsActivity : AppCompatActivity() {
 

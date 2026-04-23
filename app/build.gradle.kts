@@ -43,7 +43,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation("com.github.bumptech.glide:glide:5.0.5")
+    implementation("com.github.bumptech.glide:glide:5.0.7")
     implementation("com.google.code.gson:gson:2.13.2")
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")

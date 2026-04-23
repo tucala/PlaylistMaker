@@ -1,10 +1,11 @@
-package com.tuca.playlistmaker
+package com.tuca.playlistmaker.ui.screens
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.tuca.playlistmaker.R
 
 class LibraryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
