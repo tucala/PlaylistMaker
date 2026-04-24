@@ -25,18 +25,18 @@ import com.tuca.playlistmaker.Creator
 import com.tuca.playlistmaker.R
 import com.tuca.playlistmaker.domain.api.TrackInteractor
 import com.tuca.playlistmaker.domain.models.Track
-import com.tuca.playlistmaker.ui.track.SearchHistory
 import com.tuca.playlistmaker.ui.track.TrackAdapter
 
 class SearchActivity : AppCompatActivity() {
 
-    private val trackInteractor = Creator.provideTrackInteractor()
+    private val trackInteractor by lazy { Creator.provideTrackInteractor() }
+    private val historyInteractor by lazy { Creator.provideHistoryInteractor() }
+
 
     private lateinit var editTextSearch: EditText
     private lateinit var trackNotFound: View
     private lateinit var internetTrouble: View
     private lateinit var historyLayout: View
-    private lateinit var historyManager: SearchHistory
     private lateinit var historyRecycler: RecyclerView
     private lateinit var historyAdapter: TrackAdapter
     private lateinit var progressBar: ProgressBar
@@ -61,11 +61,11 @@ class SearchActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Creator.init(applicationContext)
         enableEdgeToEdge()
         setContentView(R.layout.activity_search)
         initViews()
         findViewById<MaterialToolbar>(R.id.toolbarTop).setNavigationOnClickListener { finish() }
-        historyManager = SearchHistory(getSharedPreferences("settings", MODE_PRIVATE))
         setupHistoryAdapter()
         setupSearchAdapter()
         setupSearchEditText()
@@ -93,7 +93,7 @@ class SearchActivity : AppCompatActivity() {
     private fun setupHistoryAdapter() {
         historyAdapter = TrackAdapter(arrayListOf()) { track ->
             if (clickDebounce()) {
-                historyManager.addTrack(track)
+                historyInteractor.addTrack(track)
                 openPlayer(track)
             }
         }
@@ -101,7 +101,7 @@ class SearchActivity : AppCompatActivity() {
         historyRecycler.adapter = historyAdapter
 
         findViewById<Button>(R.id.clearHistoryButton).setOnClickListener {
-            historyManager.clear()
+            historyInteractor.clearHistory()
             showHistory()
         }
     }
@@ -109,7 +109,7 @@ class SearchActivity : AppCompatActivity() {
     private fun setupSearchAdapter() {
         searchAdapter = TrackAdapter(arrayListOf()) { track ->
             if (clickDebounce()) {
-                historyManager.addTrack(track)
+                historyInteractor.addTrack(track)
                 openPlayer(track)
             }
         }
@@ -186,7 +186,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showHistory() {
-        val history = historyManager.getHistory()
+        val history = historyInteractor.getHistory()
         if (searchText.isEmpty()) {
             progressBar.isVisible = false
             if (history.isNotEmpty()) {

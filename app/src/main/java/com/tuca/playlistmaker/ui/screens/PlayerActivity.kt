@@ -1,7 +1,6 @@
 package com.tuca.playlistmaker.ui.screens
 
 import android.icu.text.SimpleDateFormat
-import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.tuca.playlistmaker.Creator
 import com.tuca.playlistmaker.R
 import com.tuca.playlistmaker.domain.models.Track
 import com.tuca.playlistmaker.presentation.AdditionalInfoAdapter
@@ -31,18 +31,17 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private lateinit var playButton: ImageButton
+    private val audioPlayerInteractor = Creator.provideAudioPlayerInteractor()
     private lateinit var playedTime: TextView
     private val handler = Handler(Looper.getMainLooper())
 
     private var track: Track? = null
-    private var mediaPlayer = MediaPlayer()
     private var playerState = STATE_DEFAULT
 
     private val updateTimerRunnable = object : Runnable {
         override fun run() {
             if (playerState == STATE_PLAYING) {
-                playedTime.text = SimpleDateFormat("mm:ss", Locale.getDefault())
-                    .format(mediaPlayer.currentPosition)
+                playedTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(audioPlayerInteractor.getCurrentPosition())
                 handler.postDelayed(this, 500L)
             }
         }
@@ -95,19 +94,19 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun preparePlayer(previewUrl: String?) {
         if (previewUrl.isNullOrEmpty()) return
-
-        mediaPlayer.setDataSource(previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playButton.isEnabled = true
-            playerState = STATE_PREPARED
-        }
-        mediaPlayer.setOnCompletionListener {
-            playerState = STATE_PREPARED
-            playButton.setImageResource(R.drawable.play_button)
-            handler.removeCallbacks(updateTimerRunnable)
-            playedTime.text = "00:00"
-        }
+        audioPlayerInteractor.preparePlayer(
+            previewUrl,
+            onPrepared = {
+                playButton.isEnabled = true
+                playerState = STATE_PREPARED
+            },
+            onCompletion = {
+                playerState = STATE_PREPARED
+                playButton.setImageResource(R.drawable.play_button)
+                handler.removeCallbacks(updateTimerRunnable)
+                playedTime.text = "00:00"
+            }
+        )
     }
 
     private fun playbackControl() {
@@ -118,14 +117,14 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun startPlayer() {
-        mediaPlayer.start()
+        audioPlayerInteractor.startPlayer()
         playButton.setImageResource(R.drawable.pause_button)
         playerState = STATE_PLAYING
         handler.post(updateTimerRunnable)
     }
 
     private fun pausePlayer() {
-        mediaPlayer.pause()
+        audioPlayerInteractor.pausePlayer()
         playButton.setImageResource(R.drawable.play_button)
         playerState = STATE_PAUSED
         handler.removeCallbacks(updateTimerRunnable)
@@ -139,9 +138,8 @@ class PlayerActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         handler.removeCallbacks(updateTimerRunnable)
-        mediaPlayer.release()
+        audioPlayerInteractor.releasePlayer()
     }
-
     private fun buildAdditionalInfo(track: Track): List<AdditionalInfoItem> {
         return mutableListOf<AdditionalInfoItem>().apply {
             add(AdditionalInfoItem(getString(R.string.detail_duration), track.trackTime))

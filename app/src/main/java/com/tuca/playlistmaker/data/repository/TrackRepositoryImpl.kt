@@ -1,4 +1,4 @@
-package com.tuca.playlistmaker.data
+package com.tuca.playlistmaker.data.repository
 
 import com.tuca.playlistmaker.data.dto.TrackResponse
 import com.tuca.playlistmaker.data.dto.TrackSearchRequest
