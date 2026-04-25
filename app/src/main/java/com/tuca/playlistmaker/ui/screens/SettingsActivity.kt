@@ -12,12 +12,12 @@ import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
+import com.tuca.playlistmaker.Creator
 import com.tuca.playlistmaker.R
 
 class SettingsActivity : AppCompatActivity() {
 
-    private var darkTheme = false
-    private val prefs by lazy { getSharedPreferences("settings", MODE_PRIVATE) }
+    private val themeSettingsInteractor by lazy { Creator.provideThemeSettingsInteractor() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,14 +33,12 @@ class SettingsActivity : AppCompatActivity() {
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbarTop)
         toolbar.setNavigationOnClickListener { finish() }
 
-        darkTheme = prefs.getBoolean("dark_theme", false)
-        switchTheme(darkTheme)
-
         val themeSwitcher = findViewById<SwitchCompat>(R.id.switchDarkMode)
-        themeSwitcher.isChecked = darkTheme
+        themeSwitcher.isChecked = themeSettingsInteractor.isDarkThemeEnabled()
+        applyTheme(themeSwitcher.isChecked)
         themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
-            switchTheme(isChecked)
-            prefs.edit().putBoolean("dark_theme", isChecked).apply()
+            themeSettingsInteractor.setDarkThemeEnabled(isChecked)
+            applyTheme(isChecked)
         }
 
         val shareApp = findViewById<TextView>(R.id.shareApp)
@@ -69,8 +67,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun switchTheme(darkThemeEnabled: Boolean) {
-        darkTheme = darkThemeEnabled
+    private fun applyTheme(darkThemeEnabled: Boolean) {
         AppCompatDelegate.setDefaultNightMode(
             if (darkThemeEnabled) AppCompatDelegate.MODE_NIGHT_YES
             else AppCompatDelegate.MODE_NIGHT_NO

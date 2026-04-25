@@ -61,7 +61,6 @@ class SearchActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Creator.init(applicationContext)
         enableEdgeToEdge()
         setContentView(R.layout.activity_search)
         initViews()

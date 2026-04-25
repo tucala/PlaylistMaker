@@ -1,31 +1,29 @@
 package com.tuca.playlistmaker.domain.impl
 
-import android.media.MediaPlayer
+import com.tuca.playlistmaker.domain.api.AudioPlayerRepository
 import com.tuca.playlistmaker.domain.api.AudioPlayerInteractor
 
-class AudioPlayerInteractorImpl : AudioPlayerInteractor {
-    private val mediaPlayer = MediaPlayer()
+class AudioPlayerInteractorImpl(
+    private val repository: AudioPlayerRepository
+) : AudioPlayerInteractor {
 
     override fun preparePlayer(previewUrl: String, onPrepared: () -> Unit, onCompletion: () -> Unit) {
-        mediaPlayer.setDataSource(previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener { onPrepared() }
-        mediaPlayer.setOnCompletionListener { onCompletion() }
+        repository.prepare(previewUrl, onPrepared, onCompletion)
     }
 
     override fun startPlayer() {
-        mediaPlayer.start()
+        repository.start()
     }
 
     override fun pausePlayer() {
-        mediaPlayer.pause()
+        repository.pause()
     }
 
     override fun releasePlayer() {
-        mediaPlayer.release()
+        repository.release()
     }
 
     override fun getCurrentPosition(): Int {
-        return mediaPlayer.currentPosition
+        return repository.getCurrentPosition()
     }
 }
