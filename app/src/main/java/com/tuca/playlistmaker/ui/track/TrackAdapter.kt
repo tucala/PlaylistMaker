@@ -1,8 +1,10 @@
-package com.tuca.playlistmaker
+package com.tuca.playlistmaker.ui.track
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.tuca.playlistmaker.R
+import com.tuca.playlistmaker.domain.models.Track
 
 class TrackAdapter(
     private var tracks: List<Track>,
