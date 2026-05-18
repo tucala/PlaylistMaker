@@ -45,9 +45,10 @@ class PlayerActivity : AppCompatActivity() {
 
         val currentTrack = track ?: return
         val audioPlayerInteractor = Creator.provideAudioPlayerInteractor()
+        val zeroTimeText = getString(R.string.zeroTime)
         viewModel = ViewModelProvider(
             this,
-            PlayerViewModelFactory(currentTrack, audioPlayerInteractor)
+            PlayerViewModelFactory(currentTrack, audioPlayerInteractor, zeroTimeText)
         )[PlayerViewModel::class.java]
 
         initViews()

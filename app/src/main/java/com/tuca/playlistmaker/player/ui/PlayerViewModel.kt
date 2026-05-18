@@ -16,7 +16,8 @@ import java.util.Locale
 
 class PlayerViewModel(
     private val track: Track,
-    private val audioPlayerInteractor: AudioPlayerInteractor
+    private val audioPlayerInteractor: AudioPlayerInteractor,
+    private val zeroTimeText: String
 ) : ViewModel() {
 
     private val _state = MutableLiveData(PlayerState(track = track))
@@ -58,14 +59,14 @@ class PlayerViewModel(
         audioPlayerInteractor.preparePlayer(
             previewUrl = previewUrl,
             onPrepared = {
-                updateState { copy(isPlayButtonEnabled = true, currentTimeText = "00:00") }
+                updateState { copy(isPlayButtonEnabled = true, currentTimeText = zeroTimeText) }
             },
             onCompletion = {
                 timerJob?.cancel()
                 updateState {
                     copy(
                         isPlaying = false,
-                        currentTimeText = "00:00"
+                        currentTimeText = zeroTimeText
                     )
                 }
             }
@@ -112,11 +113,11 @@ class PlayerViewModel(
 
 class PlayerViewModelFactory(
     private val track: Track,
-    private val audioPlayerInteractor: AudioPlayerInteractor
+    private val audioPlayerInteractor: AudioPlayerInteractor,
+    private val zeroTimeText: String
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        return PlayerViewModel(track, audioPlayerInteractor) as T
+        return PlayerViewModel(track, audioPlayerInteractor, zeroTimeText) as T
     }
 }
-
