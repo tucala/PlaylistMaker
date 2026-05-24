@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.screens.SearchActivity"
+    tools:context=".search.ui.SearchActivity"
     android:background="?attr/background">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -51,8 +51,8 @@
             android:inputType="text"
             android:maxLines="1"
             android:paddingStart="@dimen/icSearchAllign"
-            android:paddingTop="@dimen/icSearchDU"
-            android:paddingBottom="@dimen/icSearchDU"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColor="@color/searchTextColor"

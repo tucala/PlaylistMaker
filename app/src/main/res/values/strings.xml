@@ -32,4 +32,6 @@
     <string name="detail_year">Год</string>
     <string name="detail_genre">Жанр</string>
     <string name="detail_country">Страна</string>
+    <string name="zeroTime">00:00</string>
+
 </resources>
