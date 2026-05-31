@@ -3,9 +3,9 @@ package com.tuca.playlistmaker.player.data.repository
 import android.media.MediaPlayer
 import com.tuca.playlistmaker.player.domain.api.AudioPlayerRepository
 
-class AudioPlayerRepositoryImpl : AudioPlayerRepository {
-
-    private val mediaPlayer = MediaPlayer()
+class AudioPlayerRepositoryImpl(
+    private val mediaPlayer: MediaPlayer
+) : AudioPlayerRepository {
 
     override fun prepare(url: String, onPrepared: () -> Unit, onCompletion: () -> Unit) {
         mediaPlayer.apply {

@@ -2,7 +2,7 @@ package com.tuca.playlistmaker.search.domain.api
 
 import com.tuca.playlistmaker.player.domain.models.Track
 import com.tuca.playlistmaker.search.data.repository.SearchRepository
-import java.util.concurrent.Executors
+import java.util.concurrent.Executor
 
 interface SearchInteractor {
     fun searchTracks(expression: String, consumer: TracksConsumer)
@@ -16,10 +16,9 @@ interface SearchInteractor {
 }
 
 class SearchInteractorImpl(
-    private val repository: SearchRepository
+    private val repository: SearchRepository,
+    private val executor: Executor
 ) : SearchInteractor {
-
-    private val executor = Executors.newCachedThreadPool()
 
     override fun searchTracks(expression: String, consumer: SearchInteractor.TracksConsumer) {
         executor.execute {

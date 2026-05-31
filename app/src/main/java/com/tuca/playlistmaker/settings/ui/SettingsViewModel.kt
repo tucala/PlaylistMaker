@@ -3,8 +3,6 @@ package com.tuca.playlistmaker.settings.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.tuca.playlistmaker.settings.domain.api.ThemeSettingsInteractor
 
 class SettingsViewModel(
@@ -31,14 +29,5 @@ class SettingsViewModel(
     fun onActionHandled() {
         val isDark = themeSettingsInteractor.isDarkThemeEnabled()
         _state.value = SettingsState.Content(isDark)
-    }
-}
-
-class SettingsViewModelFactory(
-    private val interactor: ThemeSettingsInteractor
-) : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        return SettingsViewModel(interactor) as T
     }
 }
