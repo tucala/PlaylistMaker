@@ -1,7 +1,6 @@
 package com.tuca.playlistmaker.search.domain.api
 
 import com.tuca.playlistmaker.player.domain.models.Track
-import com.tuca.playlistmaker.search.data.repository.SearchRepository
 import java.util.concurrent.Executor
 
 interface SearchInteractor {

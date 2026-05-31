@@ -14,7 +14,6 @@ import com.tuca.playlistmaker.search.data.network.ITunesApi
 import com.tuca.playlistmaker.search.data.network.NetworkClient
 import com.tuca.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.tuca.playlistmaker.search.data.repository.HistoryRepositoryImpl
-import com.tuca.playlistmaker.search.data.repository.SearchRepository
 import com.tuca.playlistmaker.search.data.repository.SearchRepositoryImpl
 import com.tuca.playlistmaker.search.data.repository.TrackRepositoryImpl
 import com.tuca.playlistmaker.search.domain.api.HistoryRepository
@@ -22,7 +21,6 @@ import com.tuca.playlistmaker.search.domain.api.SearchInteractor
 import com.tuca.playlistmaker.search.domain.api.SearchInteractorImpl
 import com.tuca.playlistmaker.search.domain.api.TrackRepository
 import com.tuca.playlistmaker.search.ui.SearchViewModel
-import com.tuca.playlistmaker.settings.data.ThemeSettingsRepository
 import com.tuca.playlistmaker.settings.data.ThemeSettingsRepositoryImpl
 import com.tuca.playlistmaker.settings.domain.api.ThemeSettingsInteractor
 import com.tuca.playlistmaker.settings.domain.api.ThemeSettingsInteractorImpl
@@ -49,7 +47,9 @@ val appModule = module {
         androidContext().getSharedPreferences(SETTINGS_PREFS, Context.MODE_PRIVATE)
     }
 
-    single<ThemeSettingsRepository> { ThemeSettingsRepositoryImpl(get(localStoragePrefsQualifier)) }
+    single<com.tuca.playlistmaker.settings.domain.api.ThemeSettingsRepository> {
+        ThemeSettingsRepositoryImpl(get(localStoragePrefsQualifier))
+    }
     single<ThemeSettingsInteractor> { ThemeSettingsInteractorImpl(get()) }
 
     single {
@@ -62,7 +62,7 @@ val appModule = module {
     single<NetworkClient> { RetrofitNetworkClient(get()) }
     single<TrackRepository> { TrackRepositoryImpl(get()) }
     single<HistoryRepository> { HistoryRepositoryImpl(get(settingsPrefsQualifier)) }
-    single<SearchRepository> { SearchRepositoryImpl(get(), get()) }
+    single<com.tuca.playlistmaker.search.domain.api.SearchRepository> { SearchRepositoryImpl(get(), get()) }
     single<Executor> { Executors.newCachedThreadPool() }
     single<SearchInteractor> { SearchInteractorImpl(get(), get()) }
 

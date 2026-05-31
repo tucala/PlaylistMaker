@@ -1,14 +1,12 @@
 package com.tuca.playlistmaker.settings.domain.api
 
-import com.tuca.playlistmaker.settings.data.ThemeSettingsRepository
-
 interface ThemeSettingsInteractor {
     fun isDarkThemeEnabled(): Boolean
     fun setDarkThemeEnabled(isEnabled: Boolean)
 }
 
 class ThemeSettingsInteractorImpl(
-    private val repository: ThemeSettingsRepository
+    private val repository: com.tuca.playlistmaker.settings.domain.api.ThemeSettingsRepository
 ) : ThemeSettingsInteractor {
 
     override fun isDarkThemeEnabled(): Boolean {
