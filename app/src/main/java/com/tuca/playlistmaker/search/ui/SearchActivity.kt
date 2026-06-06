@@ -17,19 +17,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.tuca.playlistmaker.R
-import com.tuca.playlistmaker.creator.Creator
 import com.tuca.playlistmaker.player.domain.models.Track
 import com.tuca.playlistmaker.player.ui.PlayerActivity
 import com.tuca.playlistmaker.search.ui.track.TrackAdapter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModel()
     private lateinit var editTextSearch: EditText
     private lateinit var trackNotFound: View
     private lateinit var internetTrouble: View
@@ -55,12 +54,6 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_search)
-
-        val searchInteractor = Creator.provideSearchInteractor(applicationContext)
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModelFactory(searchInteractor)
-        )[SearchViewModel::class.java]
 
         initViews()
         setupToolbar()

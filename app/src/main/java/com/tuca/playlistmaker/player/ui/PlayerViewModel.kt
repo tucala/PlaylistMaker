@@ -3,9 +3,7 @@ package com.tuca.playlistmaker.player.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.tuca.playlistmaker.player.domain.models.Track
 import com.tuca.playlistmaker.player.domain.api.AudioPlayerInteractor
 import kotlinx.coroutines.Job
@@ -108,16 +106,5 @@ class PlayerViewModel(
 
     companion object {
         private const val TIMER_DELAY = 500L
-    }
-}
-
-class PlayerViewModelFactory(
-    private val track: Track,
-    private val audioPlayerInteractor: AudioPlayerInteractor,
-    private val zeroTimeText: String
-) : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        return PlayerViewModel(track, audioPlayerInteractor, zeroTimeText) as T
     }
 }

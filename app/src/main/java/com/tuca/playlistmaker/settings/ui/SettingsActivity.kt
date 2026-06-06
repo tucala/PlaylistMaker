@@ -11,24 +11,22 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.MaterialToolbar
 import com.tuca.playlistmaker.R
-import com.tuca.playlistmaker.creator.Creator
-import com.tuca.playlistmaker.settings.domain.api.ThemeSettingsInteractor
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel: SettingsViewModel by viewModel()
     private lateinit var themeSwitcher: SwitchCompat
+    private lateinit var shareApp: TextView
+    private lateinit var textSupport: TextView
+    private lateinit var userAccept: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_settings)
-
-        val interactor = Creator.provideThemeSettingsInteractor(applicationContext)
-        viewModel = ViewModelProvider(this, SettingsViewModelFactory(interactor))[SettingsViewModel::class.java]
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.setting)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -40,9 +38,9 @@ class SettingsActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener { finish() }
 
         themeSwitcher = findViewById(R.id.switchDarkMode)
-        val shareApp = findViewById<TextView>(R.id.shareApp)
-        val textSupport = findViewById<TextView>(R.id.textSupport)
-        val userAccept = findViewById<TextView>(R.id.userAccept)
+        shareApp = findViewById(R.id.shareApp)
+        textSupport = findViewById(R.id.textSupport)
+        userAccept = findViewById(R.id.userAccept)
 
         themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onThemeChanged(isChecked)

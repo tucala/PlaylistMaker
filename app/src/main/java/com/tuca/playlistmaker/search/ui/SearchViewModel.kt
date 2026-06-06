@@ -3,9 +3,7 @@ package com.tuca.playlistmaker.search.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.tuca.playlistmaker.player.domain.models.Track
 import com.tuca.playlistmaker.search.domain.api.SearchInteractor
 import kotlinx.coroutines.Job
@@ -172,14 +170,5 @@ class SearchViewModel(
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
-}
-
-class SearchViewModelFactory(
-    private val searchInteractor: SearchInteractor
-) : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        return SearchViewModel(searchInteractor) as T
     }
 }

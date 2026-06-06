@@ -2,14 +2,9 @@ package com.tuca.playlistmaker.settings.data
 
 import android.content.SharedPreferences
 
-interface ThemeSettingsRepository {
-    fun isDarkThemeEnabled(): Boolean
-    fun setDarkThemeEnabled(isEnabled: Boolean)
-}
-
 class ThemeSettingsRepositoryImpl(
     private val sharedPreferences: SharedPreferences
-) : ThemeSettingsRepository {
+) : com.tuca.playlistmaker.settings.domain.api.ThemeSettingsRepository {
 
     companion object {
         private const val DARK_THEME_KEY = "dark_theme_key"

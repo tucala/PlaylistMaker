@@ -6,15 +6,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.appbar.MaterialToolbar
 import com.tuca.playlistmaker.R
-import com.tuca.playlistmaker.creator.Creator
 import com.tuca.playlistmaker.player.domain.models.Track
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -22,7 +22,8 @@ class PlayerActivity : AppCompatActivity() {
         const val EXTRA_TRACK = "EXTRA_TRACK"
     }
 
-    private lateinit var viewModel: PlayerViewModel
+    private lateinit var currentTrack: Track
+    private val viewModel: PlayerViewModel by viewModel { parametersOf(currentTrack) }
     private lateinit var playButton: ImageButton
     private lateinit var playedTime: TextView
     private lateinit var trackNameText: TextView
@@ -30,26 +31,18 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var playerImage: ImageView
     private lateinit var infoRecycler: RecyclerView
 
-    private var track: Track? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_player)
 
-        track = intent.getSerializableExtra(EXTRA_TRACK) as? Track
+        val track = intent.getSerializableExtra(EXTRA_TRACK) as? Track
         if (track == null) {
             finish()
             return
         }
 
-        val currentTrack = track ?: return
-        val audioPlayerInteractor = Creator.provideAudioPlayerInteractor()
-        val zeroTimeText = getString(R.string.zeroTime)
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModelFactory(currentTrack, audioPlayerInteractor, zeroTimeText)
-        )[PlayerViewModel::class.java]
+        currentTrack = track
 
         initViews()
         setupToolbar()
