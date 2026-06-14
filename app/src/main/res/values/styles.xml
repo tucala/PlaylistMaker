@@ -85,4 +85,20 @@
         <item name="layout_constraintEnd_toEndOf">parent</item>
     </style>
 
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="playlistButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:textAllCaps">false</item>
+        <item name="cornerRadius">@dimen/buttonRadius</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/ColorChangeRev</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+        <item name="android:backgroundTint">@color/ColorChange</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+
 </resources>

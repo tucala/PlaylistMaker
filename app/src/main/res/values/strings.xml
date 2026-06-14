@@ -34,4 +34,9 @@
     <string name="detail_country">Страна</string>
     <string name="zeroTime">00:00</string>
 
+    <string name="favorites_title">Избранные треки</string>
+    <string name="playlists_title">Плейлисты</string>
+    <string name="empty_favorites_text">Медиатека пуста</string>
+    <string name="empty_playlists_text">Вы не создали ни одного плейлиста</string>
+    <string name="new_playlist_button">Новый плейлист</string>
 </resources>

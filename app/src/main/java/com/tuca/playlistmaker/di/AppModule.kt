@@ -25,6 +25,8 @@ import com.tuca.playlistmaker.settings.data.ThemeSettingsRepositoryImpl
 import com.tuca.playlistmaker.settings.domain.api.ThemeSettingsInteractor
 import com.tuca.playlistmaker.settings.domain.api.ThemeSettingsInteractorImpl
 import com.tuca.playlistmaker.settings.ui.SettingsViewModel
+import com.tuca.playlistmaker.library.ui.FavoritesViewModel
+import com.tuca.playlistmaker.library.ui.PlaylistsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -76,4 +78,6 @@ val appModule = module {
     viewModel { (track: Track) ->
         PlayerViewModel(track, get(), androidContext().getString(R.string.zeroTime))
     }
+    viewModel { FavoritesViewModel() }
+    viewModel { PlaylistsViewModel() }
 }
