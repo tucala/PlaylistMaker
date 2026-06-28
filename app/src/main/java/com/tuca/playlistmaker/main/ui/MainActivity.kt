@@ -30,16 +30,17 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.setupWithNavController(navController)
+        val divider = findViewById<View>(R.id.divider)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.playerFragment -> {
                     bottomNavigationView.visibility = View.GONE
-                    findViewById<View>(R.id.divider).visibility = View.GONE
+                    divider.visibility = View.GONE
                 }
                 else -> {
                     bottomNavigationView.visibility = View.VISIBLE
-                    findViewById<View>(R.id.divider).visibility = View.VISIBLE
+                    divider.visibility = View.VISIBLE
                 }
             }
         }

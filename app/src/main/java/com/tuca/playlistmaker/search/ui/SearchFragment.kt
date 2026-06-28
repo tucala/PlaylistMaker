@@ -1,6 +1,5 @@
 package com.tuca.playlistmaker.search.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,16 +9,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.tuca.playlistmaker.R
+import com.tuca.playlistmaker.databinding.FragmentSearchBinding
 import com.tuca.playlistmaker.player.domain.models.Track
 import com.tuca.playlistmaker.search.ui.track.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -27,17 +22,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SearchFragment : Fragment() {
 
     private val viewModel: SearchViewModel by viewModel()
-    private lateinit var editTextSearch: EditText
-    private lateinit var trackNotFound: View
-    private lateinit var internetTrouble: View
-    private lateinit var historyLayout: View
-    private lateinit var historyRecycler: RecyclerView
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var historyAdapter: TrackAdapter
-    private lateinit var progressBar: ProgressBar
-    private lateinit var recyclerView: RecyclerView
     private lateinit var searchAdapter: TrackAdapter
-    private lateinit var reloadButton: View
-    private lateinit var clearIcon: ImageView
 
     private var isClickAllowed = true
     private var isProgrammaticTextChange = false
@@ -51,14 +40,14 @@ class SearchFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_search, container, false)
+    ): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initViews(view)
         setupHistoryAdapter()
         setupSearchAdapter()
         setupSearchEditText()
@@ -69,18 +58,6 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun initViews(view: View) {
-        historyLayout = view.findViewById(R.id.historyLayout)
-        historyRecycler = view.findViewById(R.id.trackHistoryList)
-        trackNotFound = view.findViewById(R.id.track_not_found)
-        internetTrouble = view.findViewById(R.id.inet_trouble_retry)
-        reloadButton = view.findViewById(R.id.reloadButton)
-        progressBar = view.findViewById(R.id.pbSearch)
-        recyclerView = view.findViewById(R.id.recyclerView)
-        editTextSearch = view.findViewById(R.id.editTextSearch)
-        clearIcon = view.findViewById(R.id.clearIcon)
-    }
-
     private fun setupHistoryAdapter() {
         historyAdapter = TrackAdapter(arrayListOf()) { track ->
             if (clickDebounce()) {
@@ -88,10 +65,10 @@ class SearchFragment : Fragment() {
                 openPlayer(track)
             }
         }
-        historyRecycler.layoutManager = LinearLayoutManager(requireContext())
-        historyRecycler.adapter = historyAdapter
+        binding.historyLayout.trackHistoryList.layoutManager = LinearLayoutManager(requireContext())
+        binding.historyLayout.trackHistoryList.adapter = historyAdapter
 
-        view?.findViewById<Button>(R.id.clearHistoryButton)?.setOnClickListener {
+        binding.historyLayout.clearHistoryButton.setOnClickListener {
             viewModel.onClearHistoryClicked()
         }
     }
@@ -103,12 +80,12 @@ class SearchFragment : Fragment() {
                 openPlayer(track)
             }
         }
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = searchAdapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = searchAdapter
     }
 
     private fun setupSearchEditText() {
-        editTextSearch.addTextChangedListener(object : TextWatcher {
+        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (isProgrammaticTextChange) return
                 viewModel.onQueryChanged(s?.toString().orEmpty())
@@ -120,11 +97,11 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupActions() {
-        clearIcon.setOnClickListener {
-            editTextSearch.setText("")
+        binding.clearIcon.setOnClickListener {
+            binding.editTextSearch.setText("")
         }
 
-        editTextSearch.setOnEditorActionListener { _, actionId, _ ->
+        binding.editTextSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 viewModel.onSearchAction()
                 true
@@ -133,25 +110,25 @@ class SearchFragment : Fragment() {
             }
         }
 
-        reloadButton.setOnClickListener {
+        binding.inetTroubleRetry.reloadButton.setOnClickListener {
             viewModel.onRetryClicked()
         }
     }
 
     private fun render(state: SearchState) {
-        if (editTextSearch.text?.toString() != state.query) {
+        if (binding.editTextSearch.text?.toString() != state.query) {
             isProgrammaticTextChange = true
-            editTextSearch.setText(state.query)
-            editTextSearch.setSelection(state.query.length)
+            binding.editTextSearch.setText(state.query)
+            binding.editTextSearch.setSelection(state.query.length)
             isProgrammaticTextChange = false
         }
 
-        clearIcon.isVisible = state.query.isNotEmpty()
-        progressBar.isVisible = state.isLoading
-        historyLayout.isVisible = state.isHistoryVisible
-        recyclerView.isVisible = state.isTracksVisible
-        trackNotFound.isVisible = state.isEmptyStateVisible
-        internetTrouble.isVisible = state.isErrorStateVisible
+        binding.clearIcon.isVisible = state.query.isNotEmpty()
+        binding.pbSearch.isVisible = state.isLoading
+        binding.historyLayout.root.isVisible = state.isHistoryVisible
+        binding.recyclerView.isVisible = state.isTracksVisible
+        binding.trackNotFound.root.isVisible = state.isEmptyStateVisible
+        binding.inetTroubleRetry.root.isVisible = state.isErrorStateVisible
 
         historyAdapter.updateTracks(state.history)
         searchAdapter.updateTracks(state.tracks)
@@ -171,5 +148,10 @@ class SearchFragment : Fragment() {
             R.id.action_searchFragment_to_playerFragment,
             Bundle().apply { putSerializable("EXTRA_TRACK", track) }
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
