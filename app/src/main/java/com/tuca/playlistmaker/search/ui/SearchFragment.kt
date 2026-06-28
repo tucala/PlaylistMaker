@@ -6,27 +6,25 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
 import com.tuca.playlistmaker.R
 import com.tuca.playlistmaker.player.domain.models.Track
-import com.tuca.playlistmaker.player.ui.PlayerActivity
 import com.tuca.playlistmaker.search.ui.track.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
 
     private val viewModel: SearchViewModel by viewModel()
     private lateinit var editTextSearch: EditText
@@ -50,43 +48,37 @@ class SearchActivity : AppCompatActivity() {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_search)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_search, container, false)
+    }
 
-        initViews()
-        setupToolbar()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initViews(view)
         setupHistoryAdapter()
         setupSearchAdapter()
         setupSearchEditText()
         setupActions()
 
-        viewModel.state.observe(this) { state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             render(state)
         }
     }
 
-    private fun initViews() {
-        historyLayout = findViewById(R.id.historyLayout)
-        historyRecycler = findViewById(R.id.trackHistoryList)
-        trackNotFound = findViewById(R.id.track_not_found)
-        internetTrouble = findViewById(R.id.inet_trouble_retry)
-        reloadButton = findViewById(R.id.reloadButton)
-        progressBar = findViewById(R.id.pbSearch)
-        recyclerView = findViewById(R.id.recyclerView)
-        editTextSearch = findViewById(R.id.editTextSearch)
-        clearIcon = findViewById(R.id.clearIcon)
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-    }
-
-    private fun setupToolbar() {
-        findViewById<MaterialToolbar>(R.id.toolbarTop).setNavigationOnClickListener { finish() }
+    private fun initViews(view: View) {
+        historyLayout = view.findViewById(R.id.historyLayout)
+        historyRecycler = view.findViewById(R.id.trackHistoryList)
+        trackNotFound = view.findViewById(R.id.track_not_found)
+        internetTrouble = view.findViewById(R.id.inet_trouble_retry)
+        reloadButton = view.findViewById(R.id.reloadButton)
+        progressBar = view.findViewById(R.id.pbSearch)
+        recyclerView = view.findViewById(R.id.recyclerView)
+        editTextSearch = view.findViewById(R.id.editTextSearch)
+        clearIcon = view.findViewById(R.id.clearIcon)
     }
 
     private fun setupHistoryAdapter() {
@@ -96,10 +88,10 @@ class SearchActivity : AppCompatActivity() {
                 openPlayer(track)
             }
         }
-        historyRecycler.layoutManager = LinearLayoutManager(this)
+        historyRecycler.layoutManager = LinearLayoutManager(requireContext())
         historyRecycler.adapter = historyAdapter
 
-        findViewById<Button>(R.id.clearHistoryButton).setOnClickListener {
+        view?.findViewById<Button>(R.id.clearHistoryButton)?.setOnClickListener {
             viewModel.onClearHistoryClicked()
         }
     }
@@ -111,7 +103,7 @@ class SearchActivity : AppCompatActivity() {
                 openPlayer(track)
             }
         }
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = searchAdapter
     }
 
@@ -175,8 +167,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun openPlayer(track: Track) {
-        val intent = Intent(this, PlayerActivity::class.java)
-        intent.putExtra("EXTRA_TRACK", track)
-        startActivity(intent)
+        findNavController().navigate(
+            R.id.action_searchFragment_to_playerFragment,
+            Bundle().apply { putSerializable("EXTRA_TRACK", track) }
+        )
     }
 }

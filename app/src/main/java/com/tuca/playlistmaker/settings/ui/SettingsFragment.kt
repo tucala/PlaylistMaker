@@ -3,19 +3,18 @@ package com.tuca.playlistmaker.settings.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.net.toUri
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.appbar.MaterialToolbar
+import androidx.fragment.app.Fragment
 import com.tuca.playlistmaker.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : Fragment() {
 
     private val viewModel: SettingsViewModel by viewModel()
     private lateinit var themeSwitcher: SwitchCompat
@@ -23,24 +22,20 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var textSupport: TextView
     private lateinit var userAccept: TextView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_settings)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_settings, container, false)
+    }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.setting)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbarTop)
-        toolbar.setNavigationOnClickListener { finish() }
-
-        themeSwitcher = findViewById(R.id.switchDarkMode)
-        shareApp = findViewById(R.id.shareApp)
-        textSupport = findViewById(R.id.textSupport)
-        userAccept = findViewById(R.id.userAccept)
+        themeSwitcher = view.findViewById(R.id.switchDarkMode)
+        shareApp = view.findViewById(R.id.shareApp)
+        textSupport = view.findViewById(R.id.textSupport)
+        userAccept = view.findViewById(R.id.userAccept)
 
         themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onThemeChanged(isChecked)
@@ -49,7 +44,7 @@ class SettingsActivity : AppCompatActivity() {
         textSupport.setOnClickListener { viewModel.onSupportClicked() }
         userAccept.setOnClickListener { viewModel.onTermsClicked() }
 
-        viewModel.state.observe(this) { state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             render(state)
         }
     }

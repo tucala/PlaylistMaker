@@ -1,11 +1,14 @@
 package com.tuca.playlistmaker.player.ui
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,11 +19,7 @@ import com.tuca.playlistmaker.player.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class PlayerActivity : AppCompatActivity() {
-
-    companion object {
-        const val EXTRA_TRACK = "EXTRA_TRACK"
-    }
+class PlayerFragment : Fragment() {
 
     private lateinit var currentTrack: Track
     private val viewModel: PlayerViewModel by viewModel { parametersOf(currentTrack) }
@@ -33,38 +32,48 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_player)
-
-        val track = intent.getSerializableExtra(EXTRA_TRACK) as? Track
+        
+        val track = arguments?.getSerializable("EXTRA_TRACK") as? Track
         if (track == null) {
-            finish()
+            findNavController().navigateUp()
             return
         }
-
         currentTrack = track
+    }
 
-        initViews()
-        setupToolbar()
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_player, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initViews(view)
+        setupToolbar(view)
         bindTrack(currentTrack)
         setupListeners()
 
-        viewModel.state.observe(this) { state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             render(state)
         }
     }
 
-    private fun initViews() {
-        playButton = findViewById(R.id.playButton)
-        playedTime = findViewById(R.id.playedTime)
-        trackNameText = findViewById(R.id.trackName)
-        artistNameText = findViewById(R.id.artistName)
-        playerImage = findViewById(R.id.playerImage)
-        infoRecycler = findViewById(R.id.trackAddInfo)
+    private fun initViews(view: View) {
+        playButton = view.findViewById(R.id.playButton)
+        playedTime = view.findViewById(R.id.playedTime)
+        trackNameText = view.findViewById(R.id.trackName)
+        artistNameText = view.findViewById(R.id.artistName)
+        playerImage = view.findViewById(R.id.playerImage)
+        infoRecycler = view.findViewById(R.id.trackAddInfo)
     }
 
-    private fun setupToolbar() {
-        findViewById<MaterialToolbar>(R.id.toolbarTop).setNavigationOnClickListener { finish() }
+    private fun setupToolbar(view: View) {
+        view.findViewById<MaterialToolbar>(R.id.toolbarTop).setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun bindTrack(currentTrack: Track) {
@@ -79,7 +88,7 @@ class PlayerActivity : AppCompatActivity() {
             .transform(RoundedCorners(cornerRadius))
             .into(playerImage)
 
-        infoRecycler.layoutManager = LinearLayoutManager(this)
+        infoRecycler.layoutManager = LinearLayoutManager(requireContext())
         infoRecycler.adapter = AdditionalInfoAdapter(buildAdditionalInfo(currentTrack))
     }
 

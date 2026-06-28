@@ -3,7 +3,6 @@ package com.tuca.playlistmaker.di
 import android.content.Context
 import android.media.MediaPlayer
 import com.tuca.playlistmaker.R
-import com.tuca.playlistmaker.main.ui.MainViewModel
 import com.tuca.playlistmaker.player.data.repository.AudioPlayerRepositoryImpl
 import com.tuca.playlistmaker.player.domain.api.AudioPlayerInteractor
 import com.tuca.playlistmaker.player.domain.api.AudioPlayerRepository
@@ -72,7 +71,6 @@ val appModule = module {
     factory<AudioPlayerRepository> { AudioPlayerRepositoryImpl(get()) }
     factory<AudioPlayerInteractor> { AudioPlayerInteractorImpl(get()) }
 
-    viewModel { MainViewModel() }
     viewModel { SearchViewModel(get()) }
     viewModel { SettingsViewModel(get()) }
     viewModel { (track: Track) ->

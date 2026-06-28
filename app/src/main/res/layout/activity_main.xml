@@ -6,57 +6,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".main.ui.MainActivity"
-    style="@style/mainBack">
+    android:background="?attr/background">
 
-    <TextView
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textSize="@dimen/buttonText"
-        android:text="@string/app_name"
-        android:fontFamily="@font/ys_display_medium"
-        android:gravity="start|top"
-        android:padding="@dimen/allign"
-        android:layout_marginTop="14dp"
-        android:layout_marginStart="@dimen/allign"
-        tools:ignore="MissingConstraints" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="@dimen/bottomMargin"
-        android:orientation="vertical"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#E6E8EB"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/background"
+        app:menu="@menu/bottom_navigation_menu"
+        app:itemIconTint="@color/bottom_navigation_colors"
+        app:itemTextColor="@color/bottom_navigation_colors"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleText"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="-51dp">
-
-
-        <Button
-            android:id="@+id/search"
-            android:text="@string/search"
-            app:icon="@drawable/ic_search"
-            style="@style/mainButton"/>
-
-        <Button
-            android:id="@+id/library"
-            android:text="@string/library"
-            app:icon="@drawable/ic_media"
-            style="@style/mainButton"/>
-
-        <Button
-            android:id="@+id/settings"
-            android:text="@string/settings"
-            app:icon="@drawable/ic_settings"
-            style="@style/mainButton"/>
-
-    </LinearLayout>
-
-    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

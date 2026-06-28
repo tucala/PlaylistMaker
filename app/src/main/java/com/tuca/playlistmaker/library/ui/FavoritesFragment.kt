@@ -32,6 +32,5 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun render(state: FavoritesState) {
-        // Will handle state changes in future sprints (currently statically empty)
     }
 }

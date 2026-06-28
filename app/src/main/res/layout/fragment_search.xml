@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search.ui.SearchActivity"
+    tools:context=".search.ui.SearchFragment"
     android:background="?attr/background">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -17,9 +17,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_back"
         app:title="@string/search"
-        app:titleMarginStart="12dp"
+        app:titleMarginStart="16dp"
         app:titleTextAppearance="@style/ToolbarTitleAppearance" />
 
     <FrameLayout
@@ -124,6 +123,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
