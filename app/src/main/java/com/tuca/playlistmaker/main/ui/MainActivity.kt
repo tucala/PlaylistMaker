@@ -1,21 +1,17 @@
 package com.tuca.playlistmaker.main.ui
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tuca.playlistmaker.R
-import com.tuca.playlistmaker.library.ui.LibraryActivity
-import com.tuca.playlistmaker.search.ui.SearchActivity
-import com.tuca.playlistmaker.settings.ui.SettingsActivity
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-
-    private val viewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,37 +24,24 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val searchButton: Button = findViewById(R.id.search)
-        val libraryButton: Button = findViewById(R.id.library)
-        val settingsButton: Button = findViewById(R.id.settings)
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.fragment_container) as NavHostFragment
+        val navController = navHostFragment.navController
 
-        searchButton.setOnClickListener { viewModel.onSearchClicked() }
-        libraryButton.setOnClickListener { viewModel.onLibraryClicked() }
-        settingsButton.setOnClickListener { viewModel.onSettingsClicked() }
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.setupWithNavController(navController)
+        val divider = findViewById<View>(R.id.divider)
 
-        viewModel.state.observe(this) { state ->
-            render(state)
-        }
-    }
-
-    private fun render(state: MainState) {
-        when (state) {
-            is MainState.Content -> {
-            }
-            is MainState.NavigateToSearch -> {
-                val intent = Intent(this, SearchActivity::class.java)
-                startActivity(intent)
-                viewModel.onNavigationHandled() // Уведомляем ViewModel, что переход обработан
-            }
-            is MainState.NavigateToLibrary -> {
-                val intent = Intent(this, LibraryActivity::class.java)
-                startActivity(intent)
-                viewModel.onNavigationHandled()
-            }
-            is MainState.NavigateToSettings -> {
-                val intent = Intent(this, SettingsActivity::class.java)
-                startActivity(intent)
-                viewModel.onNavigationHandled()
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.playerFragment -> {
+                    bottomNavigationView.visibility = View.GONE
+                    divider.visibility = View.GONE
+                }
+                else -> {
+                    bottomNavigationView.visibility = View.VISIBLE
+                    divider.visibility = View.VISIBLE
+                }
             }
         }
     }

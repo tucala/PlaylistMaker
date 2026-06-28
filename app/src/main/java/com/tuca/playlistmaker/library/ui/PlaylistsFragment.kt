@@ -32,6 +32,5 @@ class PlaylistsFragment : Fragment() {
     }
 
     private fun render(state: PlaylistsState) {
-        // Will handle state changes in future sprints (currently statically empty)
     }
 }

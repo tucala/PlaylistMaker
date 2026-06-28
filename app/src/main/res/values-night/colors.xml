@@ -16,4 +16,5 @@
     <color name="playerButtonsBack">#40FFFFFF</color>
     <color name="searchBarCol">#1A1B22</color>
     <color name="clearTextButton">#1A1B22</color>
+    <color name="bottomColor">#FFFFFF</color>
 </resources>

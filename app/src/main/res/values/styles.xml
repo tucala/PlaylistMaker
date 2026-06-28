@@ -101,4 +101,8 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
     </style>
 
+    <style name="Theme.App.BottomNavigationView" parent="">
+        <item name="colorSecondaryContainer">@android:color/transparent</item>
+    </style>
+
 </resources>

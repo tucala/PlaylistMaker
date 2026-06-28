@@ -3,53 +3,41 @@ package com.tuca.playlistmaker.settings.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.net.toUri
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.appbar.MaterialToolbar
+import androidx.fragment.app.Fragment
 import com.tuca.playlistmaker.R
+import com.tuca.playlistmaker.databinding.FragmentSettingsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsFragment : Fragment() {
 
     private val viewModel: SettingsViewModel by viewModel()
-    private lateinit var themeSwitcher: SwitchCompat
-    private lateinit var shareApp: TextView
-    private lateinit var textSupport: TextView
-    private lateinit var userAccept: TextView
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_settings)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.setting)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val toolbar = findViewById<MaterialToolbar>(R.id.toolbarTop)
-        toolbar.setNavigationOnClickListener { finish() }
-
-        themeSwitcher = findViewById(R.id.switchDarkMode)
-        shareApp = findViewById(R.id.shareApp)
-        textSupport = findViewById(R.id.textSupport)
-        userAccept = findViewById(R.id.userAccept)
-
-        themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
+        binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onThemeChanged(isChecked)
         }
-        shareApp.setOnClickListener { viewModel.onShareClicked() }
-        textSupport.setOnClickListener { viewModel.onSupportClicked() }
-        userAccept.setOnClickListener { viewModel.onTermsClicked() }
+        binding.shareApp.setOnClickListener { viewModel.onShareClicked() }
+        binding.textSupport.setOnClickListener { viewModel.onSupportClicked() }
+        binding.userAccept.setOnClickListener { viewModel.onTermsClicked() }
 
-        viewModel.state.observe(this) { state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             render(state)
         }
     }
@@ -57,8 +45,8 @@ class SettingsActivity : AppCompatActivity() {
     private fun render(state: SettingsState) {
         when (state) {
             is SettingsState.Content -> {
-                if (themeSwitcher.isChecked != state.isDarkModeEnabled) {
-                    themeSwitcher.isChecked = state.isDarkModeEnabled
+                if (binding.switchDarkMode.isChecked != state.isDarkModeEnabled) {
+                    binding.switchDarkMode.isChecked = state.isDarkModeEnabled
                 }
                 applyTheme(state.isDarkModeEnabled)
             }
@@ -104,5 +92,10 @@ class SettingsActivity : AppCompatActivity() {
         val url = getString(R.string.userAcceptUrl)
         val browserIntent = Intent(Intent.ACTION_VIEW, url.toUri())
         startActivity(browserIntent)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

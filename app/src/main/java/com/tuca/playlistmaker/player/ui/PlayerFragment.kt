@@ -1,75 +1,68 @@
 package com.tuca.playlistmaker.player.ui
 
 import android.os.Bundle
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.google.android.material.appbar.MaterialToolbar
 import com.tuca.playlistmaker.R
+import com.tuca.playlistmaker.databinding.FragmentPlayerBinding
 import com.tuca.playlistmaker.player.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class PlayerActivity : AppCompatActivity() {
-
-    companion object {
-        const val EXTRA_TRACK = "EXTRA_TRACK"
-    }
+class PlayerFragment : Fragment() {
 
     private lateinit var currentTrack: Track
     private val viewModel: PlayerViewModel by viewModel { parametersOf(currentTrack) }
-    private lateinit var playButton: ImageButton
-    private lateinit var playedTime: TextView
-    private lateinit var trackNameText: TextView
-    private lateinit var artistNameText: TextView
-    private lateinit var playerImage: ImageView
-    private lateinit var infoRecycler: RecyclerView
+
+    private var _binding: FragmentPlayerBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_player)
-
-        val track = intent.getSerializableExtra(EXTRA_TRACK) as? Track
+        
+        val track = arguments?.getSerializable("EXTRA_TRACK") as? Track
         if (track == null) {
-            finish()
+            findNavController().navigateUp()
             return
         }
-
         currentTrack = track
+    }
 
-        initViews()
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         setupToolbar()
         bindTrack(currentTrack)
         setupListeners()
 
-        viewModel.state.observe(this) { state ->
+        viewModel.state.observe(viewLifecycleOwner) { state ->
             render(state)
         }
     }
 
-    private fun initViews() {
-        playButton = findViewById(R.id.playButton)
-        playedTime = findViewById(R.id.playedTime)
-        trackNameText = findViewById(R.id.trackName)
-        artistNameText = findViewById(R.id.artistName)
-        playerImage = findViewById(R.id.playerImage)
-        infoRecycler = findViewById(R.id.trackAddInfo)
-    }
-
     private fun setupToolbar() {
-        findViewById<MaterialToolbar>(R.id.toolbarTop).setNavigationOnClickListener { finish() }
+        binding.toolbarTop.setNavigationOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun bindTrack(currentTrack: Track) {
-        trackNameText.text = currentTrack.trackName
-        artistNameText.text = currentTrack.artistName
+        binding.trackName.text = currentTrack.trackName
+        binding.artistName.text = currentTrack.artistName
 
         val cornerRadius = resources.getDimensionPixelSize(R.dimen.playerCoverRadius)
         Glide.with(this)
@@ -77,22 +70,22 @@ class PlayerActivity : AppCompatActivity() {
             .placeholder(R.drawable.ic_placeholder)
             .centerCrop()
             .transform(RoundedCorners(cornerRadius))
-            .into(playerImage)
+            .into(binding.playerImage)
 
-        infoRecycler.layoutManager = LinearLayoutManager(this)
-        infoRecycler.adapter = AdditionalInfoAdapter(buildAdditionalInfo(currentTrack))
+        binding.trackAddInfo.layoutManager = LinearLayoutManager(requireContext())
+        binding.trackAddInfo.adapter = AdditionalInfoAdapter(buildAdditionalInfo(currentTrack))
     }
 
     private fun setupListeners() {
-        playButton.setOnClickListener {
+        binding.playButton.setOnClickListener {
             viewModel.onPlayClicked()
         }
     }
 
     private fun render(state: PlayerState) {
-        playedTime.text = state.currentTimeText
-        playButton.isEnabled = state.isPlayButtonEnabled
-        playButton.setImageResource(
+        binding.playedTime.text = state.currentTimeText
+        binding.playButton.isEnabled = state.isPlayButtonEnabled
+        binding.playButton.setImageResource(
             if (state.isPlaying) R.drawable.pause_button else R.drawable.play_button
         )
     }
@@ -100,6 +93,11 @@ class PlayerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.onPauseFromUi()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onDestroy() {

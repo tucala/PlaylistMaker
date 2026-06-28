@@ -25,6 +25,7 @@ class SearchViewModel(
     }
 
     fun onQueryChanged(query: String) {
+        if (query == currentQuery) return
         currentQuery = query
         searchJob?.cancel()
 

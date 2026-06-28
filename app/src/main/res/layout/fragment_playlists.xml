@@ -9,15 +9,23 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/new_playlist_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/new_playlist_button"
+            style="@style/playlistButton" />
 
         <ImageView
             android:id="@+id/empty_playlists_image"
             android:layout_width="120dp"
             android:layout_height="120dp"
+            android:layout_marginTop="46dp"
             android:src="@drawable/no_track_image" />
 
         <TextView
@@ -31,14 +39,6 @@
             android:textColor="@color/ColorChange"
             android:gravity="center"
             android:textAlignment="center" />
-
-        <Button
-            android:id="@+id/new_playlist_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/new_playlist_button"
-            style="@style/playlistButton" />
 
     </LinearLayout>
 

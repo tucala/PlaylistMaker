@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    tools:context=".library.ui.LibraryFragment"
     android:background="?attr/background">
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -12,11 +14,9 @@
         style="@style/tnSwitch"
         android:layout_width="match_parent"
         android:layout_height="@dimen/downToolbar"
-        app:navigationIcon="@drawable/ic_back"
         app:title="@string/library"
-        app:titleMarginStart="12dp"
+        app:titleMarginStart="16dp"
         app:titleTextAppearance="@style/ToolbarTitleAppearance"
-        app:navigationIconTint="@color/ColorChange"
         app:titleTextColor="@color/ColorChange" />
 
     <com.google.android.material.tabs.TabLayout
@@ -33,7 +33,7 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1" />
 
 </LinearLayout>
