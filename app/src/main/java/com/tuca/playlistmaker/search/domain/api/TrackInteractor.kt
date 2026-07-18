@@ -1,12 +1,10 @@
 package com.tuca.playlistmaker.search.domain.api
 
 import com.tuca.playlistmaker.player.domain.models.Track
+import com.tuca.playlistmaker.util.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface TrackInteractor {
-    fun searchTracks(expression: String, consumer: TracksConsumer)
-
-    interface TracksConsumer {
-        fun consume(foundTracks: List<Track>?, errorMessage: String?)
-    }
+    fun searchTracks(expression: String): Flow<Resource<List<Track>>>
 }
 

@@ -32,8 +32,6 @@ import org.koin.dsl.module
 import org.koin.core.qualifier.named
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
 
 private const val LOCAL_STORAGE_PREFS = "local_storage"
 private const val SETTINGS_PREFS = "settings"
@@ -64,8 +62,7 @@ val appModule = module {
     single<TrackRepository> { TrackRepositoryImpl(get()) }
     single<HistoryRepository> { HistoryRepositoryImpl(get(settingsPrefsQualifier)) }
     single<com.tuca.playlistmaker.search.domain.api.SearchRepository> { SearchRepositoryImpl(get(), get()) }
-    single<Executor> { Executors.newCachedThreadPool() }
-    single<SearchInteractor> { SearchInteractorImpl(get(), get()) }
+    single<SearchInteractor> { SearchInteractorImpl(get()) }
 
     factory { MediaPlayer() }
     factory<AudioPlayerRepository> { AudioPlayerRepositoryImpl(get()) }

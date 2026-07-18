@@ -5,10 +5,13 @@ import com.tuca.playlistmaker.search.data.dto.TrackResponse
 import com.tuca.playlistmaker.search.data.dto.TrackSearchRequest
 import com.tuca.playlistmaker.search.data.network.NetworkClient
 import com.tuca.playlistmaker.search.domain.api.TrackRepository
+import com.tuca.playlistmaker.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
 
-    override fun searchTracks(query: String, callback: (List<Track>?, Int) -> Unit) {
+    override fun searchTracks(query: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(query))
         if (response.resultCode == 200) {
             val tracks = (response as TrackResponse).results.map { dto ->
@@ -24,9 +27,9 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
                     country = dto.country
                 )
             }
-            callback(tracks, response.resultCode)
+            emit(Resource.Success(tracks))
         } else {
-            callback(null, response.resultCode)
+            emit(Resource.Error("Server error code: ${response.resultCode}"))
         }
     }
 }
