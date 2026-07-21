@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tuca.playlistmaker.player.domain.models.Track
 import com.tuca.playlistmaker.search.domain.api.SearchInteractor
+import com.tuca.playlistmaker.util.Resource
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -71,7 +72,9 @@ class SearchViewModel(
                 isErrorStateVisible = false
             )
         }
-        searchTracks(currentQuery)
+        searchJob = viewModelScope.launch {
+            searchTracks(currentQuery)
+        }
     }
 
     fun onRetryClicked() {
@@ -92,7 +95,9 @@ class SearchViewModel(
                 isErrorStateVisible = false
             )
         }
-        searchTracks(currentQuery)
+        searchJob = viewModelScope.launch {
+            searchTracks(currentQuery)
+        }
     }
 
     fun onTrackClicked(track: Track) {
@@ -105,13 +110,13 @@ class SearchViewModel(
         refreshHistory(preserveSearchResults = true)
     }
 
-    private fun searchTracks(query: String) {
-        searchInteractor.searchTracks(query, object : SearchInteractor.TracksConsumer {
-            override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
-                viewModelScope.launch {
-                    if (query != currentQuery) return@launch
-
-                    if (foundTracks != null) {
+    private suspend fun searchTracks(query: String) {
+        searchInteractor.searchTracks(query)
+            .collect { result ->
+                if (query != currentQuery) return@collect
+                when (result) {
+                    is Resource.Success -> {
+                        val foundTracks = result.data ?: emptyList()
                         updateState {
                             copy(
                                 query = query,
@@ -123,7 +128,8 @@ class SearchViewModel(
                                 isErrorStateVisible = false
                             )
                         }
-                    } else {
+                    }
+                    is Resource.Error -> {
                         updateState {
                             copy(
                                 query = query,
@@ -138,7 +144,6 @@ class SearchViewModel(
                     }
                 }
             }
-        })
     }
 
     private fun loadHistory() {

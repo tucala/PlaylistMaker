@@ -1,8 +1,9 @@
 package com.tuca.playlistmaker.search.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -30,8 +31,6 @@ class SearchFragment : Fragment() {
 
     private var isClickAllowed = true
     private var isProgrammaticTextChange = false
-
-    private val handler = Handler(Looper.getMainLooper())
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
@@ -138,7 +137,10 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }

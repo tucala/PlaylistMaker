@@ -105,6 +105,6 @@ class PlayerViewModel(
     }
 
     companion object {
-        private const val TIMER_DELAY = 500L
+        private const val TIMER_DELAY = 300L
     }
 }

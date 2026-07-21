@@ -1,30 +1,22 @@
 package com.tuca.playlistmaker.search.domain.api
 
 import com.tuca.playlistmaker.player.domain.models.Track
-import java.util.concurrent.Executor
+import com.tuca.playlistmaker.util.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface SearchInteractor {
-    fun searchTracks(expression: String, consumer: TracksConsumer)
+    fun searchTracks(expression: String): Flow<Resource<List<Track>>>
     fun addTrack(track: Track)
     fun getHistory(): List<Track>
     fun clearHistory()
-
-    interface TracksConsumer {
-        fun consume(foundTracks: List<Track>?, errorMessage: String?)
-    }
 }
 
 class SearchInteractorImpl(
-    private val repository: SearchRepository,
-    private val executor: Executor
+    private val repository: SearchRepository
 ) : SearchInteractor {
 
-    override fun searchTracks(expression: String, consumer: SearchInteractor.TracksConsumer) {
-        executor.execute {
-            repository.searchTracks(expression) { foundTracks, errorMessage ->
-                consumer.consume(foundTracks, errorMessage)
-            }
-        }
+    override fun searchTracks(expression: String): Flow<Resource<List<Track>>> {
+        return repository.searchTracks(expression)
     }
 
     override fun addTrack(track: Track) {
