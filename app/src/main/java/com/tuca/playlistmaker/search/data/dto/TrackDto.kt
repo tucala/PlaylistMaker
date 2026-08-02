@@ -1,6 +1,7 @@
 package com.tuca.playlistmaker.search.data.dto
 
 data class TrackDto(
+    val trackId: Int?,
     val trackName: String,
     val artistName: String,
     val previewUrl: String?,

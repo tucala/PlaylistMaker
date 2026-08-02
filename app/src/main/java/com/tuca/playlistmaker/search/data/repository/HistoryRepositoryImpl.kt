@@ -35,6 +35,7 @@ class HistoryRepositoryImpl(
             if (parts.size >= 4) {
                 list.add(
                     Track(
+                        trackId = parts.getOrNull(9)?.toIntOrNull() ?: 0,
                         trackName = parts[0],
                         artistName = parts[1],
                         trackTimeMillis = parts[2].toLongOrNull() ?: 0L,
@@ -61,7 +62,7 @@ class HistoryRepositoryImpl(
             builder.append(
                 "${track.trackName}|${track.artistName}|${track.trackTimeMillis}|${track.artworkUrl100}" +
                     "|${track.collectionName.orEmpty()}|${track.releaseDate.orEmpty()}" +
-                    "|${track.primaryGenreName.orEmpty()}|${track.country.orEmpty()}|${track.previewUrl.orEmpty()}"
+                    "|${track.primaryGenreName.orEmpty()}|${track.country.orEmpty()}|${track.previewUrl.orEmpty()}|${track.trackId}"
             )
             if (index != list.size - 1) builder.append(";")
         }

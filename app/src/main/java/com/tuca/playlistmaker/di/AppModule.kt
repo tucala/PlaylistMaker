@@ -24,6 +24,13 @@ import com.tuca.playlistmaker.settings.data.ThemeSettingsRepositoryImpl
 import com.tuca.playlistmaker.settings.domain.api.ThemeSettingsInteractor
 import com.tuca.playlistmaker.settings.domain.api.ThemeSettingsInteractorImpl
 import com.tuca.playlistmaker.settings.ui.SettingsViewModel
+import androidx.room.Room
+import com.tuca.playlistmaker.library.data.db.AppDatabase
+import com.tuca.playlistmaker.library.data.db.converter.TrackDbConverter
+import com.tuca.playlistmaker.library.data.db.FavoritesRepositoryImpl
+import com.tuca.playlistmaker.library.domain.db.FavoritesRepository
+import com.tuca.playlistmaker.library.domain.db.FavoritesInteractor
+import com.tuca.playlistmaker.library.domain.db.FavoritesInteractorImpl
 import com.tuca.playlistmaker.library.ui.FavoritesViewModel
 import com.tuca.playlistmaker.library.ui.PlaylistsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -64,6 +71,13 @@ val appModule = module {
     single<com.tuca.playlistmaker.search.domain.api.SearchRepository> { SearchRepositoryImpl(get(), get()) }
     single<SearchInteractor> { SearchInteractorImpl(get()) }
 
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db").build()
+    }
+    single { TrackDbConverter() }
+    single<FavoritesRepository> { FavoritesRepositoryImpl(get(), get()) }
+    single<FavoritesInteractor> { FavoritesInteractorImpl(get()) }
+
     factory { MediaPlayer() }
     factory<AudioPlayerRepository> { AudioPlayerRepositoryImpl(get()) }
     factory<AudioPlayerInteractor> { AudioPlayerInteractorImpl(get()) }
@@ -71,8 +85,8 @@ val appModule = module {
     viewModel { SearchViewModel(get()) }
     viewModel { SettingsViewModel(get()) }
     viewModel { (track: Track) ->
-        PlayerViewModel(track, get(), androidContext().getString(R.string.zeroTime))
+        PlayerViewModel(track, get(), get(), androidContext().getString(R.string.zeroTime))
     }
-    viewModel { FavoritesViewModel() }
+    viewModel { FavoritesViewModel(get()) }
     viewModel { PlaylistsViewModel() }
 }
