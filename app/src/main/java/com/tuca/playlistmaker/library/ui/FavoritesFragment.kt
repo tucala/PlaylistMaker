@@ -51,7 +51,6 @@ class FavoritesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        isClickAllowed = true
         viewModel.fillData()
     }
 
@@ -83,7 +82,7 @@ class FavoritesFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            lifecycleScope.launch {
+            viewLifecycleOwner.lifecycleScope.launch {
                 delay(CLICK_DEBOUNCE_DELAY)
                 isClickAllowed = true
             }
