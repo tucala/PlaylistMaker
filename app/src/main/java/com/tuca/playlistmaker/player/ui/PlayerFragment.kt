@@ -80,6 +80,9 @@ class PlayerFragment : Fragment() {
         binding.playButton.setOnClickListener {
             viewModel.onPlayClicked()
         }
+        binding.likeTrack.setOnClickListener {
+            viewModel.onFavoriteClicked()
+        }
     }
 
     private fun render(state: PlayerState) {
@@ -87,6 +90,9 @@ class PlayerFragment : Fragment() {
         binding.playButton.isEnabled = state.isPlayButtonEnabled
         binding.playButton.setImageResource(
             if (state.isPlaying) R.drawable.pause_button else R.drawable.play_button
+        )
+        binding.likeTrack.setImageResource(
+            if (state.isFavorite) R.drawable.like_button_active else R.drawable.like_button
         )
     }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tuca.playlistmaker.library.domain.db.FavoritesInteractor
 import com.tuca.playlistmaker.player.domain.models.Track
 import com.tuca.playlistmaker.player.domain.api.AudioPlayerInteractor
 import kotlinx.coroutines.Job
@@ -15,16 +16,43 @@ import java.util.Locale
 class PlayerViewModel(
     private val track: Track,
     private val audioPlayerInteractor: AudioPlayerInteractor,
+    private val favoritesInteractor: FavoritesInteractor,
     private val zeroTimeText: String
 ) : ViewModel() {
 
-    private val _state = MutableLiveData(PlayerState(track = track))
+    private val _state = MutableLiveData(PlayerState(track = track, isFavorite = track.isFavorite))
     val state: LiveData<PlayerState> get() = _state
 
     private var timerJob: Job? = null
 
     init {
         preparePlayer()
+        observeFavoriteStatus()
+    }
+
+    private fun observeFavoriteStatus() {
+        viewModelScope.launch {
+            favoritesInteractor.getFavoriteTrackIds().collect { favoriteIds ->
+                val isFav = favoriteIds.contains(track.trackId)
+                track.isFavorite = isFav
+                updateState { copy(isFavorite = isFav) }
+            }
+        }
+    }
+
+    fun onFavoriteClicked() {
+        val currentState = _state.value ?: return
+        viewModelScope.launch {
+            if (currentState.isFavorite) {
+                favoritesInteractor.removeFavoriteTrack(track)
+                track.isFavorite = false
+                updateState { copy(isFavorite = false) }
+            } else {
+                favoritesInteractor.addFavoriteTrack(track)
+                track.isFavorite = true
+                updateState { copy(isFavorite = true) }
+            }
+        }
     }
 
     fun onPlayClicked() {
