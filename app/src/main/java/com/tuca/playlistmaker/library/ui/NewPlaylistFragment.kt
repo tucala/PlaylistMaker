@@ -2,8 +2,7 @@ package com.tuca.playlistmaker.library.ui
 
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import androidx.core.widget.doOnTextChanged
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,13 +65,9 @@ class NewPlaylistFragment : Fragment() {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
-        binding.playlistNameEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.createButton.isEnabled = !s.isNullOrBlank()
-            }
-            override fun afterTextChanged(s: Editable?) {}
-        })
+        binding.playlistNameEditText.doOnTextChanged { s, _, _, _ ->
+            binding.createButton.isEnabled = !s.isNullOrBlank()
+        }
 
         binding.createButton.setOnClickListener {
             val name = binding.playlistNameEditText.text?.toString()?.trim() ?: ""

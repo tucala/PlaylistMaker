@@ -88,18 +88,20 @@ class PlayerFragment : Fragment() {
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
+                val currentBinding = _binding ?: return
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        binding.dimOverlay.isVisible = false
+                        currentBinding.dimOverlay.isVisible = false
                     }
                     else -> {
-                        binding.dimOverlay.isVisible = true
+                        currentBinding.dimOverlay.isVisible = true
                     }
                 }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.dimOverlay.alpha = (slideOffset + 1f) / 2f
+                val currentBinding = _binding ?: return
+                currentBinding.dimOverlay.alpha = (slideOffset + 1f) / 2f
             }
         })
 

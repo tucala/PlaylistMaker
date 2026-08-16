@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import android.text.Editable
-import android.text.TextWatcher
+import androidx.core.widget.doAfterTextChanged
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -84,15 +83,10 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupSearchEditText() {
-        binding.editTextSearch.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                if (isProgrammaticTextChange) return
-                viewModel.onQueryChanged(s?.toString().orEmpty())
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-        })
+        binding.editTextSearch.doAfterTextChanged { s ->
+            if (isProgrammaticTextChange) return@doAfterTextChanged
+            viewModel.onQueryChanged(s?.toString().orEmpty())
+        }
     }
 
     private fun setupActions() {
