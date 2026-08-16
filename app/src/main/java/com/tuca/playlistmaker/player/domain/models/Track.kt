@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 data class Track(
+    val trackId: Int,
     val trackName: String,
     val artistName: String,
     val previewUrl: String?,
@@ -13,7 +14,8 @@ data class Track(
     val collectionName: String?,
     val releaseDate: String?,
     val primaryGenreName: String?,
-    val country: String?
+    val country: String?,
+    var isFavorite: Boolean = false
 ) : Serializable {
     val trackTime: String
         get() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)

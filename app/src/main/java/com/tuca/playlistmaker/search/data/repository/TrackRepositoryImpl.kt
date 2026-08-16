@@ -16,6 +16,7 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
         if (response.resultCode == 200) {
             val tracks = (response as TrackResponse).results.map { dto ->
                 Track(
+                    trackId = dto.trackId ?: 0,
                     trackName = dto.trackName,
                     artistName = dto.artistName,
                     previewUrl = dto.previewUrl,

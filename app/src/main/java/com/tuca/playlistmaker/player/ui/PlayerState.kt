@@ -6,6 +6,7 @@ data class PlayerState(
     val track: Track,
     val currentTimeText: String = "00:00",
     val isPlaying: Boolean = false,
-    val isPlayButtonEnabled: Boolean = false
+    val isPlayButtonEnabled: Boolean = false,
+    val isFavorite: Boolean = false
 )
 
