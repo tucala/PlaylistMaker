@@ -21,6 +21,7 @@ class RetrofitNetworkClient(private val api: ITunesApi) : NetworkClient {
                 body.resultCode = response.code()
                 body
             } catch (e: Exception) {
+                android.util.Log.e("RetrofitNetworkClient", "doRequest exception: ${e.message}", e)
                 val errorResponse = Response()
                 errorResponse.resultCode = -1
                 errorResponse

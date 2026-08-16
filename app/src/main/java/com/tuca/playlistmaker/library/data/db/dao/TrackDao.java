@@ -21,5 +21,5 @@ public interface TrackDao {
     List<TrackEntity> getFavoriteTracks();
 
     @Query("SELECT trackId FROM favorite_tracks")
-    List<Integer> getFavoriteTrackIds();
+    List<Long> getFavoriteTrackIds();
 }

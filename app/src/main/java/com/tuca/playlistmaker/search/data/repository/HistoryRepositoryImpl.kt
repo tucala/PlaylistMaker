@@ -35,7 +35,7 @@ class HistoryRepositoryImpl(
             if (parts.size >= 4) {
                 list.add(
                     Track(
-                        trackId = parts.getOrNull(9)?.toIntOrNull() ?: 0,
+                        trackId = parts.getOrNull(9)?.toLongOrNull() ?: 0L,
                         trackName = parts[0],
                         artistName = parts[1],
                         trackTimeMillis = parts[2].toLongOrNull() ?: 0L,

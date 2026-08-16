@@ -5,8 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tuca.playlistmaker.library.domain.db.FavoritesInteractor
+import com.tuca.playlistmaker.library.domain.db.PlaylistsInteractor
+import com.tuca.playlistmaker.library.domain.models.Playlist
 import com.tuca.playlistmaker.player.domain.models.Track
 import com.tuca.playlistmaker.player.domain.api.AudioPlayerInteractor
+import com.tuca.playlistmaker.util.SingleLiveEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -17,11 +20,18 @@ class PlayerViewModel(
     private val track: Track,
     private val audioPlayerInteractor: AudioPlayerInteractor,
     private val favoritesInteractor: FavoritesInteractor,
+    private val playlistsInteractor: PlaylistsInteractor,
     private val zeroTimeText: String
 ) : ViewModel() {
 
     private val _state = MutableLiveData(PlayerState(track = track, isFavorite = track.isFavorite))
     val state: LiveData<PlayerState> get() = _state
+
+    private val _playlists = MutableLiveData<List<Playlist>>()
+    val playlists: LiveData<List<Playlist>> get() = _playlists
+
+    private val _playlistAdditionEvent = SingleLiveEvent<Pair<Boolean, String>>()
+    val playlistAdditionEvent: LiveData<Pair<Boolean, String>> get() = _playlistAdditionEvent
 
     private var timerJob: Job? = null
 
@@ -51,6 +61,26 @@ class PlayerViewModel(
                 favoritesInteractor.addFavoriteTrack(track)
                 track.isFavorite = true
                 updateState { copy(isFavorite = true) }
+            }
+        }
+    }
+
+    fun loadPlaylists() {
+        viewModelScope.launch {
+            playlistsInteractor.getPlaylists().collect { playlistsList ->
+                _playlists.value = playlistsList
+            }
+        }
+    }
+
+    fun onPlaylistClicked(playlist: Playlist) {
+        if (playlist.trackIds.contains(track.trackId)) {
+            _playlistAdditionEvent.value = Pair(false, playlist.name)
+        } else {
+            viewModelScope.launch {
+                playlistsInteractor.addTrackToPlaylist(track, playlist)
+                _playlistAdditionEvent.value = Pair(true, playlist.name)
+                loadPlaylists()
             }
         }
     }

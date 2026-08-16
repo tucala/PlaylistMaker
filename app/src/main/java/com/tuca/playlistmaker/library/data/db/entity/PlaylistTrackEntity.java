@@ -4,8 +4,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "favorite_tracks")
-public class TrackEntity {
+@Entity(tableName = "playlist_tracks")
+public class PlaylistTrackEntity {
     @PrimaryKey
     public long trackId;
     public String trackName;
@@ -19,10 +19,10 @@ public class TrackEntity {
     public String country;
     public long addedAt;
 
-    public TrackEntity() {}
+    public PlaylistTrackEntity() {}
 
     @Ignore
-    public TrackEntity(
+    public PlaylistTrackEntity(
             long trackId,
             String trackName,
             String artistName,
