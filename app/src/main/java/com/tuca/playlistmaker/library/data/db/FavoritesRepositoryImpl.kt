@@ -19,7 +19,7 @@ class FavoritesRepositoryImpl(
         emit(entities.map { trackDbConverter.map(it) })
     }.flowOn(Dispatchers.IO)
 
-    override fun getFavoriteTrackIds(): Flow<List<Int>> = flow {
+    override fun getFavoriteTrackIds(): Flow<List<Long>> = flow {
         val ids = appDatabase.trackDao().getFavoriteTrackIds()
         emit(ids ?: emptyList())
     }.flowOn(Dispatchers.IO)

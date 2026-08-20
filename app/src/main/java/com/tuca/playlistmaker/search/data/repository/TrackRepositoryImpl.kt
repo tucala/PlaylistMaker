@@ -13,21 +13,21 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
 
     override fun searchTracks(query: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TrackSearchRequest(query))
-        if (response.resultCode == 200) {
-            val tracks = (response as TrackResponse).results.map { dto ->
+        if (response.resultCode == 200 && response is TrackResponse) {
+            val tracks = response.results?.map { dto ->
                 Track(
                     trackId = dto.trackId ?: 0,
-                    trackName = dto.trackName,
-                    artistName = dto.artistName,
+                    trackName = dto.trackName ?: "",
+                    artistName = dto.artistName ?: "",
                     previewUrl = dto.previewUrl,
-                    trackTimeMillis = dto.trackTimeMillis,
-                    artworkUrl100 = dto.artworkUrl100,
+                    trackTimeMillis = dto.trackTimeMillis ?: 0L,
+                    artworkUrl100 = dto.artworkUrl100 ?: "",
                     collectionName = dto.collectionName,
                     releaseDate = dto.releaseDate,
                     primaryGenreName = dto.primaryGenreName,
                     country = dto.country
                 )
-            }
+            } ?: emptyList()
             emit(Resource.Success(tracks))
         } else {
             emit(Resource.Error("Server error code: ${response.resultCode}"))

@@ -4,22 +4,22 @@ import com.tuca.playlistmaker.player.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 class FavoritesInteractorImpl(
-    private val favoritesRepository: FavoritesRepository
+    private val repository: FavoritesRepository
 ) : FavoritesInteractor {
 
     override fun getFavoriteTracks(): Flow<List<Track>> {
-        return favoritesRepository.getFavoriteTracks()
+        return repository.getFavoriteTracks()
     }
 
-    override fun getFavoriteTrackIds(): Flow<List<Int>> {
-        return favoritesRepository.getFavoriteTrackIds()
+    override fun getFavoriteTrackIds(): Flow<List<Long>> {
+        return repository.getFavoriteTrackIds()
     }
 
     override suspend fun addFavoriteTrack(track: Track) {
-        favoritesRepository.addFavoriteTrack(track)
+        repository.addFavoriteTrack(track)
     }
 
     override suspend fun removeFavoriteTrack(track: Track) {
-        favoritesRepository.removeFavoriteTrack(track)
+        repository.removeFavoriteTrack(track)
     }
 }
