@@ -20,14 +20,14 @@ import com.tuca.playlistmaker.R
 import com.tuca.playlistmaker.databinding.FragmentNewplaylistBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewPlaylistFragment : Fragment() {
+open class NewPlaylistFragment : Fragment() {
 
-    private val viewModel: NewPlaylistViewModel by viewModel()
+    protected open val viewModel: NewPlaylistViewModel by viewModel()
 
-    private var _binding: FragmentNewplaylistBinding? = null
-    private val binding get() = _binding!!
+    protected var _binding: FragmentNewplaylistBinding? = null
+    protected val binding get() = _binding!!
 
-    private var selectedImageUri: Uri? = null
+    protected var selectedImageUri: Uri? = null
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
@@ -72,7 +72,7 @@ class NewPlaylistFragment : Fragment() {
         binding.createButton.setOnClickListener {
             val name = binding.playlistNameEditText.text?.toString()?.trim() ?: ""
             val description = binding.playlistDescriptionEditText.text?.toString()?.trim()
-            viewModel.createPlaylist(name, description, selectedImageUri)
+            onSaveButtonClicked(name, description, selectedImageUri)
         }
     }
 
@@ -87,7 +87,7 @@ class NewPlaylistFragment : Fragment() {
         )
     }
 
-    private fun handleBackPress() {
+    protected open fun handleBackPress() {
         val hasCover = selectedImageUri != null
         val hasName = !binding.playlistNameEditText.text.isNullOrBlank()
         val hasDescription = !binding.playlistDescriptionEditText.text.isNullOrBlank()
@@ -113,7 +113,11 @@ class NewPlaylistFragment : Fragment() {
             .show()
     }
 
-    private fun observeViewModel() {
+    protected open fun onSaveButtonClicked(name: String, description: String?, coverUri: Uri?) {
+        viewModel.createPlaylist(name, description, coverUri)
+    }
+
+    protected open fun observeViewModel() {
         viewModel.playlistCreated.observe(viewLifecycleOwner) { playlistName ->
             Toast.makeText(
                 requireContext(),

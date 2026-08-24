@@ -35,7 +35,9 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.playerFragment,
-                R.id.newPlaylistFragment -> {
+                R.id.newPlaylistFragment,
+                R.id.playlistDetailFragment,
+                R.id.editPlaylistFragment -> {
                     bottomNavigationView.visibility = View.GONE
                     divider.visibility = View.GONE
                 }

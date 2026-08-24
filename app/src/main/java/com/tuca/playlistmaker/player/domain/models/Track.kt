@@ -2,6 +2,7 @@ package com.tuca.playlistmaker.player.domain.models
 
 import java.io.Serializable
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 data class Track(
@@ -18,6 +19,6 @@ data class Track(
     var isFavorite: Boolean = false
 ) : Serializable {
     val trackTime: String
-        get() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackTimeMillis)
+        get() = SimpleDateFormat("mm:ss", Locale.getDefault()).format(Date(trackTimeMillis))
     fun getCoverArtwork(): String = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
 }

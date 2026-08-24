@@ -1,6 +1,7 @@
 package com.tuca.playlistmaker.library.data.db.dao;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -16,6 +17,9 @@ public interface PlaylistDao {
 
     @Update
     void updatePlaylist(PlaylistEntity playlist);
+
+    @Delete
+    void deletePlaylist(PlaylistEntity playlist);
 
     @Query("SELECT * FROM playlists ORDER BY addedAt DESC")
     List<PlaylistEntity> getAllPlaylists();

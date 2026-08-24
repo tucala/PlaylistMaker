@@ -17,4 +17,5 @@
     <color name="searchBarCol">#1A1B22</color>
     <color name="clearTextButton">#1A1B22</color>
     <color name="bottomColor">#FFFFFF</color>
+    <color name="playlist_detail_background">#1A1B22</color>
 </resources>

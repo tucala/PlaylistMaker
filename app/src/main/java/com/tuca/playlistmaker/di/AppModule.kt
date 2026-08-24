@@ -36,7 +36,9 @@ import com.tuca.playlistmaker.library.domain.db.FavoritesInteractorImpl
 import com.tuca.playlistmaker.library.domain.db.PlaylistsRepository
 import com.tuca.playlistmaker.library.domain.db.PlaylistsInteractor
 import com.tuca.playlistmaker.library.domain.db.PlaylistsInteractorImpl
+import com.tuca.playlistmaker.library.ui.EditPlaylistViewModel
 import com.tuca.playlistmaker.library.ui.FavoritesViewModel
+import com.tuca.playlistmaker.library.ui.PlaylistDetailViewModel
 import com.tuca.playlistmaker.library.ui.NewPlaylistViewModel
 import com.tuca.playlistmaker.library.ui.PlaylistsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -99,4 +101,6 @@ val appModule = module {
     viewModel { FavoritesViewModel(get()) }
     viewModel { PlaylistsViewModel(get()) }
     viewModel { NewPlaylistViewModel(get()) }
+    viewModel { (playlistId: Int) -> PlaylistDetailViewModel(playlistId, get()) }
+    viewModel { EditPlaylistViewModel(get()) }
 }

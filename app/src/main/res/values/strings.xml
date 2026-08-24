@@ -44,6 +44,8 @@
     <string name="playlist_name_hint">Название*</string>
     <string name="playlist_description_hint">Описание</string>
     <string name="create_playlist_button">Создать</string>
+    <string name="save_playlist_button">Сохранить</string>
+    <string name="edit_playlist_title">Редактировать</string>
     <string name="finish_playlist_creation_title">Завершить создание плейлиста?</string>
     <string name="finish_playlist_creation_message">Все несохраненные данные будут потеряны</string>
     <string name="cancel">Отмена</string>
@@ -52,6 +54,22 @@
     <string name="add_to_playlist_title">Добавить в плейлист</string>
     <string name="added_to_playlist_toast">Добавлено в плейлист %s</string>
     <string name="track_already_in_playlist_toast">Трек уже добавлен в плейлист %s</string>
+
+    <string name="no_tracks_in_playlist">В плейлисте пока нет треков</string>
+    <string name="no_tracks_to_share">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="menu_share">Поделиться</string>
+    <string name="menu_edit">Редактировать информацию</string>
+    <string name="menu_delete_playlist">Удалить плейлист</string>
+    <string name="delete_track_title">Хотите удалить трек?</string>
+    <string name="delete_track_no">НЕТ</string>
+    <string name="delete_track_yes">ДА</string>
+    <string name="delete_playlist_title">Удалить плейлист</string>
+    <string name="delete_playlist_message">Вы уверены, что хотите удалить этот плейлист?</string>
+    <string name="delete_playlist_cancel">Отмена</string>
+    <string name="delete_playlist_confirm">Удалить</string>
+    <string name="delete_button">Да</string>
+    <string name="no_button">Нет</string>
+    <string name="minutes_label">мин</string>
 
     <plurals name="tracks_count">
         <item quantity="one">%d трек</item>

@@ -14,6 +14,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class PlayerViewModel(
@@ -154,7 +155,7 @@ class PlayerViewModel(
     }
 
     private fun formatTime(millis: Int): String {
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(millis)
+        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(Date(millis.toLong()))
     }
 
     private inline fun updateState(transform: PlayerState.() -> PlayerState) {

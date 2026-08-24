@@ -50,7 +50,11 @@ class PlaylistsFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        adapter = PlaylistsAdapter(emptyList()) { _ ->
+        adapter = PlaylistsAdapter(emptyList()) { playlist ->
+            val bundle = android.os.Bundle().apply {
+                putInt(PlaylistDetailFragment.ARG_PLAYLIST_ID, playlist.id)
+            }
+            findNavController().navigate(R.id.action_libraryFragment_to_playlistDetailFragment, bundle)
         }
         binding.playlistsRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.playlistsRecyclerView.adapter = adapter
