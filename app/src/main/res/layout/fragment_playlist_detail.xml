@@ -17,6 +17,7 @@
                 android:id="@+id/iv_playlist_cover"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:background="@color/playlist_cover_background"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_placeholder"
                 app:layout_constraintDimensionRatio="1:1"
@@ -146,7 +147,7 @@
         android:background="@drawable/bottom_sheet_background"
         android:orientation="vertical"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="280dp"
+        app:behavior_peekHeight="@dimen/playlist_detail_sheet_peek_height"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <View

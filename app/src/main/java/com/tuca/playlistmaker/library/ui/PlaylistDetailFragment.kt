@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.view.doOnLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,6 +76,9 @@ class PlaylistDetailFragment : Fragment() {
             state = BottomSheetBehavior.STATE_COLLAPSED
             isHideable = false
         }
+        binding.root.doOnLayout {
+            updateTracksSheetPeekHeight()
+        }
         tracksAdapter = PlaylistTrackAdapter(
             emptyList(),
             onTrackClick = { track -> navigateToPlayer(track) },
@@ -140,6 +144,9 @@ class PlaylistDetailFragment : Fragment() {
             }
             val count = playlist.tracksCount
             updatePlaylistStats(count)
+            binding.contentLayout.post {
+                updateTracksSheetPeekHeight()
+            }
             val cornerRadius = resources.getDimensionPixelSize(R.dimen.playerCoverRadius)
             if (!playlist.coverPath.isNullOrEmpty()) {
                 Glide.with(this)
@@ -201,6 +208,22 @@ class PlaylistDetailFragment : Fragment() {
     private fun updatePlaylistStats(trackCount: Int) {
         val countText = resources.getQuantityString(R.plurals.tracks_count, trackCount, trackCount)
         binding.tvPlaylistDuration.text = "${viewModel.getTotalDurationText()} • $countText"
+    }
+
+    private fun updateTracksSheetPeekHeight() {
+        if (!::tracksBottomSheetBehavior.isInitialized || binding.root.height == 0) return
+
+        val rootLocation = IntArray(2)
+        val buttonsLocation = IntArray(2)
+        binding.root.getLocationInWindow(rootLocation)
+        binding.buttonsRow.getLocationInWindow(buttonsLocation)
+
+        val sheetMargin = resources.getDimensionPixelSize(R.dimen.playlist_detail_sheet_margin)
+        val buttonsBottom = buttonsLocation[1] + binding.buttonsRow.height - rootLocation[1]
+        val availableHeight = (binding.root.height - buttonsBottom - sheetMargin).coerceAtLeast(1)
+        val defaultPeekHeight = resources.getDimensionPixelSize(R.dimen.playlist_detail_sheet_peek_height)
+
+        tracksBottomSheetBehavior.peekHeight = minOf(defaultPeekHeight, availableHeight)
     }
 
     private fun showDeleteTrackDialog(track: Track) {
