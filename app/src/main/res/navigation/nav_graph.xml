@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_libraryFragment_to_newPlaylistFragment"
             app:destination="@id/newPlaylistFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_playlistDetailFragment"
+            app:destination="@id/playlistDetailFragment" />
     </fragment>
 
     <fragment
@@ -48,6 +51,29 @@
         android:id="@+id/newPlaylistFragment"
         android:name="com.tuca.playlistmaker.library.ui.NewPlaylistFragment"
         android:label="NewPlaylistFragment"
+        tools:layout="@layout/fragment_newplaylist" />
+
+    <fragment
+        android:id="@+id/playlistDetailFragment"
+        android:name="com.tuca.playlistmaker.library.ui.PlaylistDetailFragment"
+        android:label="PlaylistDetailFragment"
+        tools:layout="@layout/fragment_playlist_detail">
+        <argument
+            android:name="PLAYLIST_ID"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_playlistDetailFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_playlistDetailFragment_to_editPlaylistFragment"
+            app:destination="@id/editPlaylistFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editPlaylistFragment"
+        android:name="com.tuca.playlistmaker.library.ui.EditPlaylistFragment"
+        android:label="EditPlaylistFragment"
         tools:layout="@layout/fragment_newplaylist" />
 
 </navigation>

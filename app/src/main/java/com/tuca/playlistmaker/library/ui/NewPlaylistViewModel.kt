@@ -8,14 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.tuca.playlistmaker.library.domain.db.PlaylistsInteractor
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(
-    private val playlistsInteractor: PlaylistsInteractor
+open class NewPlaylistViewModel(
+    protected val playlistsInteractor: PlaylistsInteractor
 ) : ViewModel() {
 
-    private val _playlistCreated = MutableLiveData<String>()
+    protected val _playlistCreated = MutableLiveData<String>()
     val playlistCreated: LiveData<String> get() = _playlistCreated
 
-    fun createPlaylist(name: String, description: String?, coverUri: Uri?) {
+    open fun createPlaylist(name: String, description: String?, coverUri: Uri?) {
         viewModelScope.launch {
             val savedCoverPath = coverUri?.let {
                 playlistsInteractor.saveImageToPrivateStorage(it)

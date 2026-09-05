@@ -28,6 +28,20 @@ class PlaylistsRepositoryImpl(
         emit(entities.map { playlistDbConverter.map(it) })
     }.flowOn(Dispatchers.IO)
 
+    override fun getPlaylistById(id: Int): Flow<Playlist> = flow {
+        val entity = appDatabase.playlistDao().getPlaylistById(id)
+        if (entity != null) {
+            emit(playlistDbConverter.map(entity))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    override fun getTracksForPlaylist(trackIds: List<Long>): Flow<List<Track>> = flow {
+        val allTracks = appDatabase.playlistTrackDao().getAllTracks()
+        val trackMap = allTracks.associateBy { it.trackId }
+        val ordered = trackIds.reversed().mapNotNull { trackMap[it] }
+        emit(ordered.map { playlistDbConverter.map(it) })
+    }.flowOn(Dispatchers.IO)
+
     override suspend fun createPlaylist(
         name: String,
         description: String?,
@@ -44,6 +58,23 @@ class PlaylistsRepositoryImpl(
             )
             val entity = playlistDbConverter.map(playlist)
             appDatabase.playlistDao().insertPlaylist(entity)
+        }
+    }
+
+    override suspend fun updatePlaylist(playlist: Playlist) {
+        withContext(Dispatchers.IO) {
+            val entity = playlistDbConverter.map(playlist)
+            appDatabase.playlistDao().updatePlaylist(entity)
+        }
+    }
+
+    override suspend fun deletePlaylist(playlist: Playlist) {
+        withContext(Dispatchers.IO) {
+            val entity = playlistDbConverter.map(playlist)
+            appDatabase.playlistDao().deletePlaylist(entity)
+            playlist.trackIds.forEach { trackId ->
+                cleanupTrackIfOrphaned(trackId)
+            }
         }
     }
 
@@ -69,6 +100,22 @@ class PlaylistsRepositoryImpl(
         }
     }
 
+    override suspend fun removeTrackFromPlaylist(trackId: Long, playlist: Playlist) {
+        withContext(Dispatchers.IO) {
+            val updatedTrackIds = playlist.trackIds.toMutableList().apply {
+                remove(trackId)
+            }
+            val updatedPlaylist = playlist.copy(
+                trackIds = updatedTrackIds,
+                tracksCount = updatedTrackIds.size
+            )
+            val entity = playlistDbConverter.map(updatedPlaylist)
+            appDatabase.playlistDao().updatePlaylist(entity)
+
+            cleanupTrackIfOrphaned(trackId)
+        }
+    }
+
     override suspend fun saveImageToPrivateStorage(uri: Uri): String = withContext(Dispatchers.IO) {
         val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlists")
         if (!filePath.exists()) {
@@ -82,5 +129,15 @@ class PlaylistsRepositoryImpl(
         inputStream?.close()
         outputStream.close()
         file.absolutePath
+    }
+
+    private fun cleanupTrackIfOrphaned(trackId: Long) {
+        val allPlaylists = appDatabase.playlistDao().getAllPlaylists()
+        val isTrackInAnyPlaylist = allPlaylists.any { playlist ->
+            playlistDbConverter.map(playlist).trackIds.contains(trackId)
+        }
+        if (!isTrackInAnyPlaylist) {
+            appDatabase.playlistTrackDao().deleteTrackById(trackId)
+        }
     }
 }

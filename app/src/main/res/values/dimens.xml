@@ -18,4 +18,6 @@
     <dimen name="textErrorSize">19sp</dimen>
     <dimen name="playerCoverRadius">8dp</dimen>
     <dimen name="progressSize">44dp</dimen>
+    <dimen name="playlist_detail_sheet_peek_height">280dp</dimen>
+    <dimen name="playlist_detail_sheet_margin">8dp</dimen>
 </resources>
